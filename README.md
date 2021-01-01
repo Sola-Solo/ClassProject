@@ -710,25 +710,25 @@ UE4提供了五类`Delegate`：
 **`Payload`**为代理绑定时传递的额外参数变量列表，这些参数会存储在代理对象内部；在触发代理时，`Payload`会紧跟着`Execute`、`ExecuteInBound`或`Broadcast`传入的参数之后，填充到绑定函数指针的参数列表中，然后执行。
 
 ```cpp
-DECLARE_DELEGATE_OneParam(FTestDelegate, **int**);
+DECLARE_DELEGATE_OneParam(FTestDelegate, int);
 
-**static** **void** **StaticDelegateProc**(**int** nCode)
+static void StaticDelegateProc(int nCode)
 {
     UE_LOG(LogTemp, Log, TEXT("StaticDelegateProc : %d"), nCode);
 }
 
-**static** **void** **StaticDelegateProcTest**(**int** nCode, **float** dis, FString txt)
+static void StaticDelegateProcTest(int nCode, float dis, FString txt)
 {
-    UE_LOG(LogTemp, Log, TEXT("StaticDelegateProcTest : %d %f %s"), nCode, dis, *****txt);
+    UE_LOG(LogTemp, Log, TEXT("StaticDelegateProcTest : %d %f %s"), nCode, dis, *txt);
 }
 
 FTestDelegate DelegateObj1;
 DelegateObj1.BindStatic(StaticDelegateProc);
 DelegateObj1.ExecuteIfBound(1);
 
-*// Payload示例*
+// Payload示例
 FTestDelegate DelegateObj2;
-DelegateObj2.BindStatic(StaticDelegateProcTest, 12.0f, FString(TEXT("Hello")));  *// 12.0f、FString(TEXT("Hello"))为绑定时传入的Payload参数*
+DelegateObj2.BindStatic(StaticDelegateProcTest, 12.0f, FString(TEXT("Hello")));  // 12.0f、FString(TEXT("Hello"))为绑定时传入的Payload参数
 DelegateObj2.ExecuteIfBound(2);
 ```
 
@@ -739,43 +739,43 @@ DelegateObj2.ExecuteIfBound(2);
 **1. 单播代理**
 
 ```cpp
-DECLARE_DELEGATE( FSimpleDelegate );  *// 无参、无返回值*
-DECLARE_DELEGATE_OneParam(FPakEncryptionKeyDelegate, uint8);  *// 1个参数、无返回值*
-DECLARE_DELEGATE_TwoParams(FPakSigningKeysDelegate, TArray**<**uint8**>&**, TArray**<**uint8**>&**);  *// 2个参数、无返回值*
-DECLARE_DELEGATE_RetVal_ThreeParams(**bool**, FOnMountPak, **const**  FString**&**, int32, IPlatformFile**::**FDirectoryVisitor*****);  *// 3个参数、bool返回值*
+DECLARE_DELEGATE( FSimpleDelegate );  // 无参、无返回值
+DECLARE_DELEGATE_OneParam(FPakEncryptionKeyDelegate, uint8);  // 1个参数、无返回值
+DECLARE_DELEGATE_TwoParams(FPakSigningKeysDelegate, TArray<uint8>&, TArray<uint8>&);  // 2个参数、无返回值
+DECLARE_DELEGATE_RetVal_ThreeParams(bool, FOnMountPak, const  FString&, int32, IPlatformFile::FDirectoryVisitor*);  // 3个参数、bool返回值
 ```
 
 **2. 多播代理**
 
 ```cpp
-DECLARE_MULTICAST_DELEGATE( FSimpleMulticastDelegate );  *// 无参*
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnTreeStarted, **const**  UBehaviorTreeComponent**&**, **const** UBehaviorTree**&** );  *// 2个参数*
-DECLARE_MULTICAST_DELEGATE_FourParams(FOnOpenURL, UIApplication*****, NSURL*****, NSString*****, id); *// 4个参数*
+DECLARE_MULTICAST_DELEGATE( FSimpleMulticastDelegate );  // 无参
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnTreeStarted, const  UBehaviorTreeComponent&, const UBehaviorTree& );  // 2个参数
+DECLARE_MULTICAST_DELEGATE_FourParams(FOnOpenURL, UIApplication*, NSURL*, NSString*, id); // 4个参数
 ```
 
 **3. 事件**
 
 ```cpp
-DECLARE_EVENT(UWorld, FOnTickFlushEvent);  *// 无参*
-DECLARE_EVENT_OneParam(IWebBrowserWindow, FOnTitleChanged, FString); *// 1个参数*
+DECLARE_EVENT(UWorld, FOnTickFlushEvent);  // 无参
+DECLARE_EVENT_OneParam(IWebBrowserWindow, FOnTitleChanged, FString); // 1个参数
 ```
 
 **4. 动态代理**
 
 ```cpp
-DECLARE_DYNAMIC_DELEGATE(FOnGameWindowCloseButtonClickedDelegate);  *// 无参、无返回值*
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnAssetLoaded, **class** **UObject***, Loaded); *// 1个参数、无返回值*
-DECLARE_DYNAMIC_DELEGATE_RetVal(EMouseCursor**::**Type, FGetMouseCursor); *// 无参、EMouseCursor::Type返回值*
-DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(UWidget*****, FGenerateWidgetForObject, UObject*****, Item); *// 1个参数、UWidget*返回值*
-DECLARE_DYNAMIC_DELEGATE_RetVal_TwoParams(FEventReply, FOnPointerEvent, FGeometry, MyGeometry, **const** FPointerEvent**&**, MouseEvent);  *// 2个参数、FEventReply返回值*
+DECLARE_DYNAMIC_DELEGATE(FOnGameWindowCloseButtonClickedDelegate);  // 无参、无返回值
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnAssetLoaded, class UObject*, Loaded); // 1个参数、无返回值
+DECLARE_DYNAMIC_DELEGATE_RetVal(EMouseCursor::Type, FGetMouseCursor); // 无参、EMouseCursor::Type返回值
+DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(UWidget*, FGenerateWidgetForObject, UObject*, Item); // 1个参数、UWidget*返回值
+DECLARE_DYNAMIC_DELEGATE_RetVal_TwoParams(FEventReply, FOnPointerEvent, FGeometry, MyGeometry, const FPointerEvent&, MouseEvent);  // 2个参数、FEventReply返回值
 ```
 
 **5. 动态多播代理**
 
 ```cpp
-DECLARE_DYNAMIC_MULTICAST_DELEGATE( FLevelStreamingLoadedStatus );  *// 无参*
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLandedSignature, **const** FHitResult**&**, Hit);  *// 1个参数*
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FMovementModeChangedSignature, **class** **ACharacter***, Character, EMovementMode, PrevMovementMode, uint8, PreviousCustomMode);  *// 3个参数*
+DECLARE_DYNAMIC_MULTICAST_DELEGATE( FLevelStreamingLoadedStatus );  // 无参
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLandedSignature, const FHitResult&, Hit);  // 1个参数
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FMovementModeChangedSignature, class ACharacter*, Character, EMovementMode, PrevMovementMode, uint8, PreviousCustomMode);  // 3个参数
 ```
 
 ---
@@ -787,15 +787,15 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FMovementModeChangedSignature, **
 定义返回值为void含1个int类型参数的单播代理类型FCharacterDelegate
 
 ```cpp
-DECLARE_DELEGATE_OneParam(FCharacterDelegate, **int**); *// TBaseDelegate<void, int>*
-**typedef** TBaseDelegate**<void**, **int>** FCharacterDelegate;
+DECLARE_DELEGATE_OneParam(FCharacterDelegate, int); // TBaseDelegate<void, int>
+typedef TBaseDelegate<void, int> FCharacterDelegate;
 ```
 
 定义返回值为bool含1个int类型参数的单播代理类型FCharacterDelegate_RetVal
 
 ```cpp
-DECLARE_DELEGATE_RetVal_OneParam(**bool**, FCharacterDelegate_RetVal, **int**);  *// TBaseDelegate<bool, int>*
-**typedef** TBaseDelegate**<bool**, **int>** FCharacterDelegate_RetVal;
+DECLARE_DELEGATE_RetVal_OneParam(bool, FCharacterDelegate_RetVal, int);  // TBaseDelegate<bool, int>
+typedef TBaseDelegate<bool, int> FCharacterDelegate_RetVal;
 ```
 
 2. 声明代理对象
@@ -810,74 +810,91 @@ FCharacterDelegate_RetVal CharacterDelegateRetVal;
 - TestDelegateCharacter.h
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#pragma once
-#include** "CoreMinimal.h"**#include** "GameFramework/Character.h"**#include** "TestDelegateCharacter.generated.h"UCLASS()
-**class** **UDelegatepTestClass** **:** **public** UObject
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Character.h"
+#include "TestDelegateCharacter.generated.h"
+
+
+UCLASS()
+class UDelegatepTestClass : public UObject
 {
 	GENERATED_BODY()
-**protected:int** m_nValue **=** 0;
-**public:void** DelegateProc1(**int** nCode)
+protected:
+	int m_nValue = 0;
+public:
+	void DelegateProc1(int nCode)
 	{
-		**this->**m_nValue **=** nCode;
+		this->m_nValue = nCode;
 		UE_LOG(LogTemp, Log, TEXT("DelegateProc1 : %d"), nCode);
 	}
 
 	UFUNCTION()
-	**void** DelegateUFunctionProc1(**int** nCode)
+	void DelegateUFunctionProc1(int nCode)
 	{
-		**this->**m_nValue **=** nCode;
+		this->m_nValue = nCode;
 		UE_LOG(LogTemp, Log, TEXT("DelegateUFunctionProc1 : %d"), nCode);
 	}
 };
 
-**class** **DelegateCppTestClass**{
-	**int** m_nValue **=** 0;
-**public:void** CppDelegateProc(**int** nCode)
+class DelegateCppTestClass
+{
+	int m_nValue = 0;
+public:
+
+	void CppDelegateProc(int nCode)
 	{
-		**this->**m_nValue **=** nCode;
+		this->m_nValue = nCode;
 		UE_LOG(LogTemp, Log, TEXT("CppDelegateProc : %d"), nCode);
 	}
 
-	**void** **CppDelegateProc2**(**int** nCode)
+	void CppDelegateProc2(int nCode)
 	{
-		**this->**m_nValue **=** nCode;
+		this->m_nValue = nCode;
 		UE_LOG(LogTemp, Log, TEXT("CppDelegateProc2 : %d"), nCode);
 	}
 
-	**void** **CppDelegateProc3**(**int** nCode)
+	void CppDelegateProc3(int nCode)
 	{
-		**this->**m_nValue **=** nCode;
+		this->m_nValue = nCode;
 		UE_LOG(LogTemp, Log, TEXT("CppDelegateProc3 : %d"), nCode);
 	}
 
-	**void** **CppDelegateProc4**(**int** nCode)
+	void CppDelegateProc4(int nCode)
 	{
-		**this->**m_nValue **=** nCode;
+		this->m_nValue = nCode;
 		UE_LOG(LogTemp, Log, TEXT("CppDelegateProc4 : %d"), nCode);
 	}
 
-	**void** **CppDelegateProc5**(**int** nCode)
+	void CppDelegateProc5(int nCode)
 	{
-		**this->**m_nValue **=** nCode;
+		this->m_nValue = nCode;
 		UE_LOG(LogTemp, Log, TEXT("CppDelegateProc5 : %d"), nCode);
 	}
 };
 
-DECLARE_DELEGATE_OneParam(FCharacterDelegate, **int**); *// TBaseDelegate<void, int>
-//typedef TBaseDelegate<void, int> FCharacterDelegate;*
-DECLARE_DELEGATE_RetVal_OneParam(**bool**, FCharacterDelegate_RetVal, **int**);  *// TBaseDelegate<bool, int>
-//typedef TBaseDelegate<bool, int> FCharacterDelegate_RetVal;*
-UCLASS(config **=** Game)
-**class** **SOMETEST_API** ATestDelegateCharacter : **public** ACharacter
+DECLARE_DELEGATE_OneParam(FCharacterDelegate, int); // TBaseDelegate<void, int>
+//typedef TBaseDelegate<void, int> FCharacterDelegate;
+
+DECLARE_DELEGATE_RetVal_OneParam(bool, FCharacterDelegate_RetVal, int);  // TBaseDelegate<bool, int>
+//typedef TBaseDelegate<bool, int> FCharacterDelegate_RetVal;
+
+UCLASS(config = Game)
+class SOMETEST_API ATestDelegateCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-**public:static** **void** StaticCharacterDelegateProc(**int** nCode);
-	**static** **void** **StaticDelegateProc**(**int** nCode);
-	**void** **OnBind**();
-	**void** **OnExecute**();
-	**void** **OnUnbind**();
+public:
+	static void StaticCharacterDelegateProc(int nCode);
+	static void StaticDelegateProc(int nCode);
+	UFUNCTION(BlueprintCallable)
+		void OnBindAndExecute();
+	
+	UFUNCTION(BlueprintCallable)
+		void OnUnbind();
 
 	FCharacterDelegate CharacterDelegate1;
 	FCharacterDelegate CharacterDelegate2;
@@ -899,98 +916,107 @@ UCLASS(config **=** Game)
 - TestDelegateCharacter.cpp
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#include** "TestDelegateCharacter.h"**void** ATestDelegateCharacter**::**StaticCharacterDelegateProc(**int** nCode)
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "TestDelegateCharacter.h"
+
+void ATestDelegateCharacter::StaticCharacterDelegateProc(int nCode)
 {
 	UE_LOG(LogTemp, Log, TEXT("StaticCharacterDelegateProc : %d"), nCode);
 }
 
-**void** ATestDelegateCharacter**::**StaticDelegateProc(**int** nCode)
+void ATestDelegateCharacter::StaticDelegateProc(int nCode)
 {
 	UE_LOG(LogTemp, Log, TEXT("StaticDelegateProc : %d"), nCode);
 }
 
-**void** ATestDelegateCharacter**::**OnBind()
+void ATestDelegateCharacter::OnBindAndExecute()
 {
-	*// Bind Static*
+	// Bind Static
 	CharacterDelegate1.BindStatic(StaticDelegateProc);
 
-	CharacterDelegate2.BindStatic(ATestDelegateCharacter**::**StaticCharacterDelegateProc);
+	CharacterDelegate2.BindStatic(/*ATestDelegateCharacter::*/StaticCharacterDelegateProc);
 
-	*// Bind Raw*
+	// Bind Raw
 	DelegateCppTestClass Obj1;
-	CharacterDelegate3.BindRaw(**&**Obj1, **&**DelegateCppTestClass**::**CppDelegateProc);
+	CharacterDelegate3.BindRaw(&Obj1, &DelegateCppTestClass::CppDelegateProc);
 
-	*// Bind Lambda*
-	**auto** LambdaDelegateProc **=** [](**int** nCode)**->void**{
+	// Bind Lambda
+	auto LambdaDelegateProc = [](int nCode)->void
+	{
 		UE_LOG(LogTemp, Log, TEXT("LambdaDelegateProc : %d"), nCode);
 	};
+
 	CharacterDelegate4.BindLambda(LambdaDelegateProc);
 
 	CharacterDelegate5.BindLambda(
-		[](**int** nCode)**->void**{
-		UE_LOG(LogTemp, Log, TEXT("LambdaDelegateProc2 : %d"), nCode);
-	}
+		[](int nCode)->void
+		{
+			UE_LOG(LogTemp, Log, TEXT("LambdaDelegateProc2 : %d"), nCode);
+		}
 	);
 
-	*// Bind Weak Lambda*
-	**auto** WeakLambdaDelegateProc **=** [](**int** nCode)**->void**{
+	// Bind Weak Lambda
+	auto WeakLambdaDelegateProc = [](int nCode)->void
+	{
 		UE_LOG(LogTemp, Log, TEXT("WeakLambdaDelegateProc : %d"), nCode);
 	};
-	UDelegatepTestClass***** UObj1 **=** NewObject**<**UDelegatepTestClass**>**(**this**, UDelegatepTestClass**::**StaticClass());
+	
+	UDelegatepTestClass* UObj1 = NewObject<UDelegatepTestClass>(this, UDelegatepTestClass::StaticClass());
 	CharacterDelegate6.BindWeakLambda(UObj1, WeakLambdaDelegateProc);
 
-	UDelegatepTestClass***** UObj2 **=** NewObject**<**UDelegatepTestClass**>**(**this**, UDelegatepTestClass**::**StaticClass());
+	UDelegatepTestClass* UObj2 = NewObject<UDelegatepTestClass>(this, UDelegatepTestClass::StaticClass());
 	CharacterDelegate7.BindWeakLambda(
-		UObj2, [](**int** nCode)**->void**{
+		UObj2, [](int nCode)->void
+	{
 		UE_LOG(LogTemp, Log, TEXT("WeakLambdaDelegateProc2 : %d"), nCode);
 	}
 	);
 
-	*// Bind SP(Shared Pointer)*
-	TSharedRef**<**DelegateCppTestClass**>** ObjSP1 **=** MakeShareable(**new** DelegateCppTestClass());
-	CharacterDelegate8.BindSP(ObjSP1, **&**DelegateCppTestClass**::**CppDelegateProc2);
+	// Bind SP(Shared Pointer)
+	TSharedRef<DelegateCppTestClass> ObjSP1 = MakeShareable(new DelegateCppTestClass());
+	CharacterDelegate8.BindSP(ObjSP1, &DelegateCppTestClass::CppDelegateProc2);
 
-	TSharedRef**<**DelegateCppTestClass**>** ObjSP2 **=** MakeShared**<**DelegateCppTestClass**>**();
-	CharacterDelegate9.BindSP(ObjSP2, **&**DelegateCppTestClass**::**CppDelegateProc3);
+	TSharedRef<DelegateCppTestClass> ObjSP2 = MakeShared<DelegateCppTestClass>();
+	CharacterDelegate9.BindSP(ObjSP2, &DelegateCppTestClass::CppDelegateProc3);
 
-	*// Bind Thread Safe SP(Shared Pointer)*
-	TSharedRef**<**DelegateCppTestClass, ESPMode**::**ThreadSafe**>** ObjSafeSP1 **=** MakeShareable(**new** DelegateCppTestClass());
-	CharacterDelegate10.BindThreadSafeSP(ObjSafeSP1, **&**DelegateCppTestClass**::**CppDelegateProc4);
+	// Bind Thread Safe SP(Shared Pointer)
+	TSharedRef<DelegateCppTestClass, ESPMode::ThreadSafe> ObjSafeSP1 = MakeShareable(new DelegateCppTestClass());
+	CharacterDelegate10.BindThreadSafeSP(ObjSafeSP1, &DelegateCppTestClass::CppDelegateProc4);
 
-	TSharedRef**<**DelegateCppTestClass, ESPMode**::**ThreadSafe**>** ObjSafeSP2 **=** MakeShared**<**DelegateCppTestClass, ESPMode**::**ThreadSafe**>**();
-	CharacterDelegate11.BindThreadSafeSP(ObjSafeSP2, **&**DelegateCppTestClass**::**CppDelegateProc5);
+	TSharedRef<DelegateCppTestClass, ESPMode::ThreadSafe> ObjSafeSP2 = MakeShared<DelegateCppTestClass, ESPMode::ThreadSafe>();
+	CharacterDelegate11.BindThreadSafeSP(ObjSafeSP2, &DelegateCppTestClass::CppDelegateProc5);
 
-	*// Bind UObject*
-	UDelegatepTestClass***** UObj3 **=** NewObject**<**UDelegatepTestClass**>**(**this**, UDelegatepTestClass**::**StaticClass());
-	CharacterDelegate12.BindUObject(UObj3, **&**UDelegatepTestClass**::**DelegateProc1);
+	// Bind UObject
+	UDelegatepTestClass* UObj3 = NewObject<UDelegatepTestClass>(this, UDelegatepTestClass::StaticClass());
+	CharacterDelegate12.BindUObject(UObj3, &UDelegatepTestClass::DelegateProc1);
 
-	*// Bind UFunction*
-	UDelegatepTestClass***** UObj4 **=** NewObject**<**UDelegatepTestClass**>**(**this**, UDelegatepTestClass**::**StaticClass());
+	// Bind UFunction
+	UDelegatepTestClass* UObj4 = NewObject<UDelegatepTestClass>(this, UDelegatepTestClass::StaticClass());
 	CharacterDelegate13.BindUFunction(UObj4, STATIC_FUNCTION_FNAME(TEXT("UDelegatepTestClass::DelegateUFunctionProc1")));
-}
 
-**void** ATestDelegateCharacter**::**OnExecute()
-{
-	CharacterDelegate1.ExecuteIfBound(1);
-	CharacterDelegate2.ExecuteIfBound(2);
-	CharacterDelegate3.ExecuteIfBound(3);
-	CharacterDelegate4.ExecuteIfBound(4);
-	CharacterDelegate5.ExecuteIfBound(5);
-	CharacterDelegate6.ExecuteIfBound(6);
-	CharacterDelegate7.ExecuteIfBound(7);
-	CharacterDelegate8.ExecuteIfBound(8);
-	CharacterDelegate9.ExecuteIfBound(9);
-	CharacterDelegate10.ExecuteIfBound(10);
-	CharacterDelegate11.ExecuteIfBound(11);
-	CharacterDelegate12.ExecuteIfBound(12);
-	**if** (CharacterDelegate13.IsBound())
 	{
-		CharacterDelegate13.Execute(13);
+		CharacterDelegate1.ExecuteIfBound(1);
+		CharacterDelegate2.ExecuteIfBound(2);
+		CharacterDelegate3.ExecuteIfBound(3);
+		CharacterDelegate4.ExecuteIfBound(4);
+		CharacterDelegate5.ExecuteIfBound(5);
+		CharacterDelegate6.ExecuteIfBound(6);
+		CharacterDelegate7.ExecuteIfBound(7);
+		CharacterDelegate8.ExecuteIfBound(8);
+		CharacterDelegate9.ExecuteIfBound(9);
+		CharacterDelegate10.ExecuteIfBound(10);
+		CharacterDelegate11.ExecuteIfBound(11);
+		CharacterDelegate12.ExecuteIfBound(12);
+		if (CharacterDelegate13.IsBound())
+		{
+			CharacterDelegate13.Execute(13);
+		}
 	}
 }
 
-**void** ATestDelegateCharacter**::**OnUnbind()
+void ATestDelegateCharacter::OnUnbind()
 {
 	CharacterDelegate1.Unbind();
 	CharacterDelegate2.Unbind();
@@ -1024,8 +1050,8 @@ UCLASS(config **=** Game)
 1. 定义返回值为void含1个int类型参数的多播代理类型FCharacterDelegate_Multicase
 
 ```cpp
-DECLARE_MULTICAST_DELEGATE_OneParam(FCharacterDelegate_Multicast, **int**);  *// TMulticastDelegate<void, int>*
-**typedef** TMulticastDelegate**<void**, **int>** FCharacterDelegate_Multicast;
+DECLARE_MULTICAST_DELEGATE_OneParam(FCharacterDelegate_Multicast, int);  // TMulticastDelegate<void, int>
+typedef TMulticastDelegate<void, int> FCharacterDelegate_Multicast;
 ```
 
 ![https://pic4.zhimg.com/80/v2-65545900c033bada80c252a86455031f_720w.jpg](https://pic4.zhimg.com/80/v2-65545900c033bada80c252a86455031f_720w.jpg)
@@ -1040,10 +1066,10 @@ FCharacterDelegate_Multicast CharacterDelegateMulticast1;
 
 ```cpp
 .h
-**static** **void** StaticDelegateProc2(**int** nCode);
+static void StaticDelegateProc2(int nCode);
 
 UFUNCTION(BlueprintCallable)
-	**void** OnDelegateMulticastTest();
+	void OnDelegateMulticastTest();
 
 FCharacterDelegate_Multicast CharacterDelegateMulticast1;
 FCharacterDelegate_Multicast CharacterDelegateMulticast2;
@@ -1053,10 +1079,8 @@ FCharacterDelegate_Multicast CharacterDelegateMulticast5;
 FCharacterDelegate_Multicast CharacterDelegateMulticast6;
 FCharacterDelegate_Multicast CharacterDelegateMulticast7;
 FCharacterDelegate_Multicast CharacterDelegateMulticast8;
-```
 
-```cpp
-
+.cpp
 void ATestDelegateCharacter::StaticDelegateProc2(int nCode)
 {
 	UE_LOG(LogTemp, Log, TEXT("StaticDelegateProc2 : %d"), nCode);
@@ -1078,6 +1102,7 @@ void ATestDelegateCharacter::OnDelegateMulticastTest()
 	FCharacterDelegate_Multicast::FDelegate MC1 = FCharacterDelegate_Multicast::FDelegate::CreateStatic(StaticDelegateProc2);
 	CharacterDelegateMulticast1.Add(MC1); // 绑定实例个数为：2
 	CharacterDelegateMulticast1.Broadcast(1); // 执行绑定实例列表（共2个）  注：执行顺序可能与函数的添加顺序不相同
+
 
 	// Add Raw
 	DelegateCppTestClass ObjMC1;
@@ -1173,9 +1198,10 @@ void ATestDelegateCharacter::OnDelegateMulticastTest()
 1. 定义返回值为void含1个int类型参数的事件类型FCharacterEvent
 
 ```cpp
-DECLARE_EVENT_OneParam(ATestDelegateCharacter, FCharacterEvent, **int**);  *// TBaseMulticastDelegate<void, int>*
-**class** **FCharacterEvent** **:** **public** TBaseMulticastDelegate**<void**, **int>**{
-    **friend** **class** **ATestDelegateCharacter**;
+DECLARE_EVENT_OneParam(ATestDelegateCharacter, FCharacterEvent, int);  // TBaseMulticastDelegate<void, int>
+class FCharacterEvent : public TBaseMulticastDelegate<void, int>
+{
+    friend class ATestDelegateCharacter;
 }
 ```
 
@@ -1194,19 +1220,19 @@ FCharacterEvent CharacterEvent;
 
 ```cpp
 .h
-DECLARE_EVENT_OneParam(ATestDelegateCharacter, FCharacterEvent, **int**);
+DECLARE_EVENT_OneParam(ATestDelegateCharacter, FCharacterEvent, int);
 
-**void** **OnTriggerEvent**(**int** nCode);
+void OnTriggerEvent(int nCode);
 
 UFUNCTION(BlueprintCallable)
-	**void** OnEventTest();
+	void OnEventTest();
 
 FCharacterEvent CharacterEvent;
 
 .cpp
-**void** ATestDelegateCharacter**::**OnEventTest()
+void ATestDelegateCharacter::OnEventTest()
 {
-	CharacterEvent.AddUObject(**this**, **&**ATestDelegateCharacter**::**OnTriggerEvent);
+	CharacterEvent.AddUObject(this, &ATestDelegateCharacter::OnTriggerEvent);
 	CharacterEvent.Broadcast(1);
 }
 ```
@@ -1220,13 +1246,13 @@ FCharacterEvent CharacterEvent;
 1. 定义返回值为void含1个int类型参数的动态代理类型FCharacterDelegate_Dynamic
 
 ```cpp
-DECLARE_DYNAMIC_DELEGATE_OneParam(FCharacterDelegate_Dynamic, **int**, nCode); *// TBaseDynamicDelegate<FWeakObjectPtr, void, int>*
+DECLARE_DYNAMIC_DELEGATE_OneParam(FCharacterDelegate_Dynamic, int, nCode); // TBaseDynamicDelegate<FWeakObjectPtr, void, int> 
 ```
 
 2. 定义返回值为bool含1个int类型参数的动态代理类型FCharacterDelegate_DynamicRetVal
 
 ```cpp
-DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(**bool**, FCharacterDelegate_DynamicRetVal, **int**, nCode);  *// TBaseDynamicDelegate<FWeakObjectPtr, bool, int>*
+DECLARE_DYNAMIC_DELEGATE_RetVal_OneParam(bool, FCharacterDelegate_DynamicRetVal, int, nCode);  // TBaseDynamicDelegate<FWeakObjectPtr, bool, int> 
 ```
 
 ![https://pic3.zhimg.com/80/v2-ae49ad3e2727e458800a843622a0abbe_720w.jpg](https://pic3.zhimg.com/80/v2-ae49ad3e2727e458800a843622a0abbe_720w.jpg)
@@ -1285,7 +1311,7 @@ bool ATestDelegateCharacter::DynamicMulticastProc(int nCode)
 定义返回值为void含1个int类型参数的动态多播代理类型FCharacterDelegate_DynamicMulticast
 
 ```cpp
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCharacterDelegate_DynamicMulticast, **int**, nCode); *// TBaseDynamicMulticastDelegate<FWeakObjectPtr, void, int>*
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCharacterDelegate_DynamicMulticast, int, nCode); // TBaseDynamicMulticastDelegate<FWeakObjectPtr, void, int>
 ```
 
 ![https://pic4.zhimg.com/80/v2-d785f9839cfda8d169c6bb14df15ea1b_720w.jpg](https://pic4.zhimg.com/80/v2-d785f9839cfda8d169c6bb14df15ea1b_720w.jpg)
@@ -1372,13 +1398,13 @@ void ATestDelegateCharacter::DynamicMulticastProc3(int nCode)
 ```cpp
 .h
 UFUNCTION(BlueprintCallable)
-	**void** BrocastCharacterDelegateDynamicMulticast(**int** nCode);
+	void BrocastCharacterDelegateDynamicMulticast(int nCode);
 
 UPROPERTY(BlueprintAssignable)
 	FCharacterDelegate_DynamicMulticast2 CharacterDelegateDynamicMulticast2;
 
 .cpp
-**void** ATestDelegateCharacter**::**BrocastCharacterDelegateDynamicMulticast(**int** nCode)
+void ATestDelegateCharacter::BrocastCharacterDelegateDynamicMulticast(int nCode)
 {
 	CharacterDelegateDynamicMulticast2.Broadcast(nCode);
 	CharacterDelegateDynamicMulticast2.Clear();
@@ -1400,7 +1426,7 @@ UPROPERTY(BlueprintAssignable)
 创建一个空白的C++项目，打开YourProject.Build.cs文件，添加以下代码：
 
 ```cpp
-PrivateDependencyModuleNames.AddRange(**new** string[] { "Slate", "SlateCore" });
+PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 ```
 
 ## **创建MainMenuHUD（继承自HUD）**
@@ -1410,27 +1436,35 @@ PrivateDependencyModuleNames.AddRange(**new** string[] { "Slate", "SlateCore" })
 - MainMenuHUD.h
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#pragma once
-#include** "CoreMinimal.h"**#include** "GameFramework/HUD.h"**#include** "MainMenuHUD.generated.h"*/**
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/HUD.h"
+#include "MainMenuHUD.generated.h"
+
+/**
  * 
- */*UCLASS()
-**class** **SOMETEST_API** AMainMenuHUD : **public** AHUD
+ */
+UCLASS()
+class SOMETEST_API AMainMenuHUD : public AHUD
 {
 	GENERATED_BODY()
-	*// Initializes the Slate UI and adds it as widget content to the game viewport.*
-	**virtual** **void** PostInitializeComponents() **override**;
+	// Initializes the Slate UI and adds it as widget content to the game viewport.
+	virtual void PostInitializeComponents() override;
 
-	*// Reference to the Main Menu Slate UI.*
-	TSharedPtr**<class** **SMainMenuUI>** MainMenuUI;
+	// Reference to the Main Menu Slate UI.
+	TSharedPtr<class SMainMenuUI> MainMenuUI;
 
-**public:***// Called by SMainMenu whenever the Play Game! button has been clicked.*
-	UFUNCTION(BlueprintImplementableEvent, Category **=** "Menus|Main Menu")
-		**void** PlayGameClicked();
+public:
+	// Called by SMainMenu whenever the Play Game! button has been clicked.
+	UFUNCTION(BlueprintImplementableEvent, Category = "Menus|Main Menu")
+		void PlayGameClicked();
 
-	*// Called by SMainMenu whenever the Quit Game button has been clicked.*
-	UFUNCTION(BlueprintImplementableEvent, Category **=** "Menus|Main Menu")
-		**void** QuitGameClicked();
+	// Called by SMainMenu whenever the Quit Game button has been clicked.
+	UFUNCTION(BlueprintImplementableEvent, Category = "Menus|Main Menu")
+		void QuitGameClicked();
 	
 };
 ```
@@ -1438,10 +1472,14 @@ PrivateDependencyModuleNames.AddRange(**new** string[] { "Slate", "SlateCore" })
 - MainMenuHUD.cpp
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#include** "MainMenuHUD.h"**void** AMainMenuHUD**::**PostInitializeComponents()
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "MainMenuHUD.h"
+
+void AMainMenuHUD::PostInitializeComponents()
 {
-	Super**::**PostInitializeComponents();
+	Super::PostInitializeComponents();
 }
 ```
 
@@ -1452,105 +1490,113 @@ PrivateDependencyModuleNames.AddRange(**new** string[] { "Slate", "SlateCore" })
 - MainMenuUI.h
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#pragma once
-#include** "CoreMinimal.h"**#include** "Widgets/SCompoundWidget.h"*/**
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Widgets/SCompoundWidget.h"
+
+/**
  * 
- */***class** **SOMETEST_API** SMainMenuUI : **public** SCompoundWidget
+ */
+class SOMETEST_API SMainMenuUI : public SCompoundWidget
 {
-**public:**SLATE_BEGIN_ARGS(SMainMenuUI)
+public:
+	SLATE_BEGIN_ARGS(SMainMenuUI)
 	{}
 
-	SLATE_ARGUMENT(TWeakObjectPtr**<class** **AMainMenuHUD>**, MainMenuHUD)
+	SLATE_ARGUMENT(TWeakObjectPtr<class AMainMenuHUD>, MainMenuHUD)
 
 	SLATE_END_ARGS()
 
-	*// Constructs and lays out the Main Menu UI Widget.*
-	*// args Arguments structure that contains widget-specific setup information.*
-	**void** Construct(**const** FArguments**&** args);
+	// Constructs and lays out the Main Menu UI Widget.
+	// args Arguments structure that contains widget-specific setup information.
+	void Construct(const FArguments& args);
 
-	*// Click handler for the Play Game! button – Calls MenuHUD’s PlayGameClicked() event.*
-	FReply **PlayGameClicked**();
+	// Click handler for the Play Game! button – Calls MenuHUD’s PlayGameClicked() event.
+	FReply PlayGameClicked();
 
-	*// Click handler for the Quit Game button – Calls MenuHUD’s QuitGameClicked() event.*
-	FReply **QuitGameClicked**();
+	// Click handler for the Quit Game button – Calls MenuHUD’s QuitGameClicked() event.
+	FReply QuitGameClicked();
 
-	*// Stores a weak reference to the HUD controlling this class.*
-	TWeakObjectPtr**<class** **AMainMenuHUD>** MainMenuHUD;
+	// Stores a weak reference to the HUD controlling this class.
+	TWeakObjectPtr<class AMainMenuHUD> MainMenuHUD;
 };
 ```
 
-大部分代码是很直接的。注意：并没有将类指定为**`UCLASS()`**，实际上这个类并不需要暴露给蓝图。首先这个类继承自**`SCompoundWidget`，`SCompoundWidget`**是一个Slate控件，可以由其他控件组成——在Slate的API中有很多示例：SVerticalBox，SHorizontalBox，SOverlay等等。相反的控件是**`SLeafWidget`**，它不包含任何控件。
+大部分代码是很直接的。注意：并没有将类指定为`UCLASS()`，实际上这个类并不需要暴露给蓝图。首先这个类继承自`SCompoundWidget`，`SCompoundWidget`是一个Slate控件，可以由其他控件组成——在Slate的API中有很多示例：SVerticalBox，SHorizontalBox，SOverlay等等。相反的控件是`SLeafWidget`，它不包含任何控件。
 
 ```cpp
 SLATE_BEGIN_ARGS(SMainMenuUI)
 {}
 
-SLATE_ARGUMENT(TWeakObjectPtr**<class** **AMainMenuHUD>**, MainMenuHUD)
+SLATE_ARGUMENT(TWeakObjectPtr<class AMainMenuHUD>, MainMenuHUD)
 
 SLATE_END_ARGS()
 
-*// Constructs and lays out the Main Menu UI Widget.
-// args Arguments structure that contains widget-specific setup information.*
-**void** Construct(**const** FArguments**&** args);
+// Constructs and lays out the Main Menu UI Widget.
+// args Arguments structure that contains widget-specific setup information.
+void Construct(const FArguments& args);
 ```
 
-如果你不熟悉虚幻的宏，这部分可能看起来很奇怪。这三个宏的作用是用来生成一个结构，其中包含在构建过程中的参数列表。您可能注意到了**`Construct`**函数的参数**`FArguments`**——这些宏就是在定义这个结构。在我们的示例中，我们只有一个参数，一个指向**`AMainMenuHUD`**的弱指针。
+如果你不熟悉虚幻的宏，这部分可能看起来很奇怪。这三个宏的作用是用来生成一个结构，其中包含在构建过程中的参数列表。您可能注意到了`Construct`函数的参数`FArguments`**——这些宏就是在定义这个结构。在我们的示例中，我们只有一个参数，一个指向`AMainMenuHUD`的弱指针。
 
 - **SLATE_BEGIN_ARGS(WidgetType):带参宏**
 
-Widgets的创建者可以使用**`SLATE_BEGIN_ARGS`**和**`SLATE_END_ARGS`**来声明和构建一个Widget,使得Widget可以通过`SNew()`和`SAssignNew()`来创建一个Widget,从而可以添加到用户视口.
+Widgets的创建者可以使用`SLATE_BEGIN_ARGS`和`SLATE_END_ARGS`来声明和构建一个Widget,使得Widget可以通过`SNew()`和`SAssignNew()`来创建一个Widget,从而可以添加到用户视口.
 
 其中参数WidgetType是你正在构建的Widget的类型;
 
 ```cpp
-**#define SLATE_BEGIN_ARGS( WidgetType ) \
+#define SLATE_BEGIN_ARGS( WidgetType ) \
 	public: \
 	struct FArguments : public TSlateBaseNamedArgs<WidgetType> \
 	{ \
 		typedef FArguments WidgetArgsType; \
-		FORCENOINLINE FArguments()**
+		FORCENOINLINE FArguments()
 ```
 
 - **SLATE_ARGUMENT( ArgType, ArgName )**
 
 ```cpp
-*/**
+/**
  * Use this macro to declare a slate argument.
  * Arguments differ from attributes in that they can only be values
- */***#define SLATE_ARGUMENT( ArgType, ArgName ) \
+ */
+#define SLATE_ARGUMENT( ArgType, ArgName ) \
 		ArgType _##ArgName; \
 		WidgetArgsType& ArgName( ArgType InArg ) \
 		{ \
 			_##ArgName = InArg; \
 			return this->Me(); \
-		}**
+		}
 ```
 
 - **SLATE_END_ARGS():无参宏**
 
 ```cpp
-**#define SLATE_END_ARGS() \
-	};**
+#define SLATE_END_ARGS() \
+	};
 ```
 
 - **回到我们代码：**
 
 ```cpp
-**void** **Construct**(**const** FArguments**&** args);
+void Construct(const FArguments& args);
 ```
 
-**`Construct()`**方法接收一个参数，我们使用**`SLATE_*`**宏对**`FArguments`**结构化，结构中包含了控件的所有参数。当我们创建控件时，将调用这个方法，您很快就可以看到如何布置窗口控件。
+`Construct()`方法接收一个参数，我们使用`SLATE_*`宏对`FArguments`结构化，结构中包含了控件的所有参数。当我们创建控件时，将调用这个方法，您很快就可以看到如何布置窗口控件。
 
 ```cpp
-*// Click handler for the Play Game! button – Calls MenuHUD’s PlayGameClicked() event.*
-FReply **PlayGameClicked**();
+// Click handler for the Play Game! button – Calls MenuHUD’s PlayGameClicked() event.
+FReply PlayGameClicked();
 
-*// Click handler for the Quit Game button – Calls MenuHUD’s QuitGameClicked() event.*
-FReply **QuitGameClicked**();
+// Click handler for the Quit Game button – Calls MenuHUD’s QuitGameClicked() event.
+FReply QuitGameClicked();
 ```
 
-这个两个方法是用来处理我们将要添加的按钮**`Play Game`**和**`Quit Game`**，这两个函数处理**`FOnClicked`**事件，它只返回一个**`FReply`**（告诉引擎是否处理事件）不接收任何参数。如果我们想要的话，我们可以为这些方法指定一个参数。在后面的教程，我会教你如何绑定数据并且使用他们。
+这个两个方法是用来处理我们将要添加的按钮`Play Game`和`Quit Game`，这两个函数处理`FOnClicked`事件，它只返回一个`FReply`（告诉引擎是否处理事件）不接收任何参数。如果我们想要的话，我们可以为这些方法指定一个参数。在后面的教程，我会教你如何绑定数据并且使用他们。
 
 ## **继续我们的主菜单**
 
@@ -1559,91 +1605,93 @@ FReply **QuitGameClicked**();
 - MainMenuUI.cpp
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#include** "SMainMenuUI.h"
-**#include** "SlateOptMacros.h"
-**#include** "Widgets/SOverlay.h"
-**#include** "Widgets/SBoxPanel.h"
-**#include** "Widgets/Input/SButton.h"
-**#include** "Widgets/Text/STextBlock.h"
-**#include** "Engine/Engine.h"
-**#include** "MainMenuHUD.h"
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "SMainMenuUI.h"
+#include "SlateOptMacros.h"
+#include "Widgets/SOverlay.h"
+#include "Widgets/SBoxPanel.h"
+#include "Widgets/Input/SButton.h"
+#include "Widgets/Text/STextBlock.h"
+#include "Engine/Engine.h"
+#include "MainMenuHUD.h"
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
-**void** SMainMenuUI**::**Construct(**const** FArguments**&** InArgs)
+void SMainMenuUI::Construct(const FArguments& InArgs)
 {
-	MainMenuHUD **=** InArgs._MainMenuHUD;
+	MainMenuHUD = InArgs._MainMenuHUD;
 
 	ChildSlot
 		[
 			SNew(SOverlay)
-			**+** SOverlay**::**Slot()
+			+ SOverlay::Slot()
 			.HAlign(HAlign_Center)
 			.VAlign(VAlign_Top)
 			[
 				SNew(STextBlock)
-				.ColorAndOpacity(FLinearColor**::**White)
-				.ShadowColorAndOpacity(FLinearColor**::**Black)
-				.ShadowOffset(FIntPoint(**-**1, 1))
+				.ColorAndOpacity(FLinearColor::White)
+				.ShadowColorAndOpacity(FLinearColor::Black)
+				.ShadowOffset(FIntPoint(-1, 1))
 				.Font(FSlateFontInfo("Arial", 26))
-				.Text(FText**::**FromString("Main Menu"))
+				.Text(FText::FromString("Main Menu"))
 			]
-			**+** SOverlay**::**Slot()
+			+ SOverlay::Slot()
 			.HAlign(HAlign_Right)
 			.VAlign(VAlign_Bottom)
 			[
 				SNew(SVerticalBox)
-				**+** SVerticalBox**::**Slot()
+				+ SVerticalBox::Slot()
 				[
 					SNew(SButton)
-					.Text(FText**::**FromString("Play Game!"))
-					.OnClicked(**this**, **&**SMainMenuUI**::**PlayGameClicked)
+					.Text(FText::FromString("Play Game!"))
+					.OnClicked(this, &SMainMenuUI::PlayGameClicked)
 				]
-				**+** SVerticalBox**::**Slot()
+				+ SVerticalBox::Slot()
 				[
 					SNew(SButton)
-					.Text(FText**::**FromString("Quit Game"))
-					.OnClicked(**this**, **&**SMainMenuUI**::**QuitGameClicked)
+					.Text(FText::FromString("Quit Game"))
+					.OnClicked(this, &SMainMenuUI::QuitGameClicked)
 				]
 			]
 		];
 }
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
-FReply SMainMenuUI**::**PlayGameClicked()
+FReply SMainMenuUI::PlayGameClicked()
 {
-	**if** (GEngine)
+	if (GEngine)
 	{
-		GEngine**->**AddOnScreenDebugMessage(**-**1, 3.f, FColor**::**Yellow, TEXT("PlayGameClicked"));
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("PlayGameClicked"));
 	}
 
-	*// actually the BlueprintImplementable function of the HUD is not called; uncomment if you want to handle the OnClick via Blueprint*
-	*//MainMenuHUD->PlayGameClicked();*
-	**return** FReply**::**Handled();
+	// actually the BlueprintImplementable function of the HUD is not called; uncomment if you want to handle the OnClick via Blueprint
+	//MainMenuHUD->PlayGameClicked();
+	return FReply::Handled();
 }
 
-FReply SMainMenuUI**::**QuitGameClicked()
+FReply SMainMenuUI::QuitGameClicked()
 {
-	**if** (GEngine)
+	if (GEngine)
 	{
-		GEngine**->**AddOnScreenDebugMessage(**-**1, 3.f, FColor**::**Yellow, TEXT("QuitGameClicked"));
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("QuitGameClicked"));
 	}
 
-	*// actually the BlueprintImplementable function of the HUD is not called; uncomment if you want to handle the OnClick via Blueprint*
-	*//MainMenuHUD->QuitGameClicked();*
-	**return** FReply**::**Handled();
+	// actually the BlueprintImplementable function of the HUD is not called; uncomment if you want to handle the OnClick via Blueprint
+	//MainMenuHUD->QuitGameClicked();
+	return FReply::Handled();
 }
 ```
 
-你可以看到我所说的Slate语法中缩进对布局的作用。我们从两个事件处理函数看起。如前面所讲，他们首先会调用HUD上的蓝图事件，这样便可以使我们在蓝图中处理这些按钮的点击事件，然后它们返回了**`FReply::Handled()`**——这是让引擎知道我们已经处理了点击事件，所以它不需要对玩家的鼠标输入做任何其他处理。
+你可以看到我所说的Slate语法中缩进对布局的作用。我们从两个事件处理函数看起。如前面所讲，他们首先会调用HUD上的蓝图事件，这样便可以使我们在蓝图中处理这些按钮的点击事件，然后它们返回了`FReply::Handled()`——这是让引擎知道我们已经处理了点击事件，所以它不需要对玩家的鼠标输入做任何其他处理。
 
-我们再来看看**`Construct()`**方法，如前面所讲，**`FArguments`**是用**`SLATE*`**宏定义的。在我们的示例中，它添加了一个方法，我们稍后将使用它来指定拥有此控件的**`HUD`**。我们首先要做的事情是捕获这个值，我们只需要将本地值设置为args包含的值就可以了。注意：args里面的实际名称是**`_MainMenuHUD`**，而不是**`MainMenuHUD`**，**`_MainMenuHUD`**是实际设置的变量，所有通过**`SLATE_ARGUMENT`**宏传递的参数都遵循此规定。
+我们再来看看`Construct()`方法，如前面所讲，`FArguments`是用`SLATE*`宏定义的。在我们的示例中，它添加了一个方法，我们稍后将使用它来指定拥有此控件的`HUD`。我们首先要做的事情是捕获这个值，我们只需要将本地值设置为args包含的值就可以了。注意：args里面的实际名称是`_MainMenuHUD`，而不是`MainMenuHUD`，`_MainMenuHUD`是实际设置的变量，所有通过`SLATE_ARGUMENT`宏传递的参数都遵循此规定。
 
-简单的说，我们使用**`[]`**运算符来组合子节点控件。对于组合控件，我需要先调用**`SNew(WidgetClass)`**方法，然后使用**`+ WidgetClass::Slot()`**来增加控件。然后我们可以在该**`slot`**中使用**`[]`**为该插槽指定子项。
+简单的说，我们使用`[]`运算符来组合子节点控件。对于组合控件，我需要先调用`SNew(WidgetClass)`方法，然后使用`+ WidgetClass::Slot()`来增加控件。然后我们可以在该`slot`中使用`[]`为该插槽指定子项。
 
-**`SOverlay`**的第一个子控件是**`STextBlock`**，他与**`TextBlock`**或者**`Label`**非常相似。为此，我们指定了颜色、阴影颜色、阴影偏移量、字体和一些文本。所有这些都是相当显而易见的，但是请注意一下，我们在**`SNew`**后没有任何**`::Slot()`**调用，因为**`TextBlock`**是一个**`SLeafWidget`**，它不能包含子控件。所以我们没有任何插槽可以使用，因此我们只能指定自身属性。
+`SOverlay`的第一个子控件是`STextBlock`，他与`TextBlock`或者`Label`非常相似。为此，我们指定了颜色、阴影颜色、阴影偏移量、字体和一些文本。所有这些都是相当显而易见的，但是请注意一下，我们在`SNew`后没有任何`::Slot()`调用，因为`TextBlock`是一个`SLeafWidget`，它不能包含子控件。所以我们没有任何插槽可以使用，因此我们只能指定自身属性。
 
-我们的第二个子控件是一个组合控件——**`SVerticalBox`**。垂直框（与它相对应的是水平框），将所有元素由上到下依次排列（对于水平框是从左到右）。在**`SVerticalBox`**的插槽内（记住，**`SVerticalBox`**是个组合控件），我们指定两个参数的**`SButton`**。第一个参数是显示在按钮上的文本，第二个是事件处理的绑定函数（**`PlayGameClicked` / `QuitGameClicked`**），每当点击时会调用该函数。然后我们完成了布局的编码，记得用**;**号结尾。
+我们的第二个子控件是一个组合控件——`SVerticalBox`。垂直框（与它相对应的是水平框），将所有元素由上到下依次排列（对于水平框是从左到右）。在`SVerticalBox`的插槽内（记住，`SVerticalBox`是个组合控件），我们指定两个参数的`SButton`。第一个参数是显示在按钮上的文本，第二个是事件处理的绑定函数（`PlayGameClicked` / `QuitGameClicked`），每当点击时会调用该函数。然后我们完成了布局的编码，记得用;号结尾。
 
 ## **修改MainMenuHUD.cpp**
 
@@ -1652,21 +1700,27 @@ FReply SMainMenuUI**::**QuitGameClicked()
 - MainMenuHUD.cpp
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#include** "MainMenuHUD.h"**#include** "SMainMenuUI.h"**#include** "Widgets/SWeakWidget.h"**void** AMainMenuHUD**::**PostInitializeComponents()
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "MainMenuHUD.h"
+#include "SMainMenuUI.h"
+#include "Widgets/SWeakWidget.h"
+
+void AMainMenuHUD::PostInitializeComponents()
 {
-	Super**::**PostInitializeComponents();
+	Super::PostInitializeComponents();
 
-	SAssignNew(MainMenuUI, SMainMenuUI).MainMenuHUD(**this**);
+	SAssignNew(MainMenuUI, SMainMenuUI).MainMenuHUD(this);
 
-	**if** (GEngine**->**IsValidLowLevel())
+	if (GEngine->IsValidLowLevel())
 	{
-		GEngine**->**GameViewport**->**AddViewportWidgetContent(SNew(SWeakWidget).PossiblyNullContent(MainMenuUI.ToSharedRef()));
+		GEngine->GameViewport->AddViewportWidgetContent(SNew(SWeakWidget).PossiblyNullContent(MainMenuUI.ToSharedRef()));
 	}
 }
 ```
 
-这里的设置就比较简单了——在确保**Engine**和**Viewport**有效后，我们创建一个**MainMenuUI**的实例，然后将控件作为内容添加到游戏视图上！注意：**SAssignNew**添加**MenuHUD**——这又是我们**SLATE_**宏的结果，记得前面我们提到的SLATE_ARGUMENT宏的**MenuHUD**部分？它不仅设置了我们的变量（**_MainMenuHUD**），也同时生成了我们这里用到的**MainMenuHUD(this)**这个设置方法。
+这里的设置就比较简单了——在确保`Engine`和`Viewport`有效后，我们创建一个`MainMenuUI`的实例，然后将控件作为内容添加到游戏视图上！注意：`SAssignNew`添加`MenuHUD`——这又是我们`SLATE_`宏的结果，记得前面我们提到的SLATE_ARGUMENT宏的`MenuHUD`部分？它不仅设置了我们的变量（`_MainMenuHUD`），也同时生成了我们这里用到的`MainMenuHUD(this)`这个设置方法。
 
 ## **创建自定义GameMode**
 
@@ -1675,16 +1729,24 @@ FReply SMainMenuUI**::**QuitGameClicked()
 - WidgetGameMode.h
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#pragma once
-#include** "CoreMinimal.h"**#include** "GameFramework/GameMode.h"**#include** "WidgetGameMode.generated.h"*/**
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/GameMode.h"
+#include "WidgetGameMode.generated.h"
+
+/**
  * 
- */*UCLASS()
-**class** **SOMETEST_API** AWidgetGameMode : **public** AGameMode
+ */
+UCLASS()
+class SOMETEST_API AWidgetGameMode : public AGameMode
 {
 	GENERATED_BODY()
 
-**public:**AWidgetGameMode();
+public:
+	AWidgetGameMode();
 	
 };
 ```
@@ -1692,10 +1754,15 @@ FReply SMainMenuUI**::**QuitGameClicked()
 - WidgetGameMode.cpp
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#include** "WidgetGameMode.h"**#include** "MainMenuHUD.h"AWidgetGameMode**::**AWidgetGameMode()
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "WidgetGameMode.h"
+#include "MainMenuHUD.h"
+
+AWidgetGameMode::AWidgetGameMode()
 {
-	HUDClass **=** AMainMenuHUD**::**StaticClass();
+	HUDClass = AMainMenuHUD::StaticClass();
 }
 ```
 
@@ -1747,82 +1814,92 @@ private:
 };
 ```
 
-这些方法注释已经阐明的很清楚了，看名字也大概知道作用。后面我们将在我们的**`Game Module`**中调用**`Initialize()`**和**`Shutdown()`**方法。**`Get()`**方法会在以后我们需要加载特定样式集时使用。**`GetStyleSetName()`**用于引擎检索我们的样式集名称。这些方法的实现同样很简单：
+这些方法注释已经阐明的很清楚了，看名字也大概知道作用。后面我们将在我们的`Game Module`中调用`Initialize()`和`Shutdown()`方法。`Get()`方法会在以后我们需要加载特定样式集时使用。`GetStyleSetName()`用于引擎检索我们的样式集名称。这些方法的实现同样很简单：
 
 - MenuStyles.cpp
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#include** "MenuStyles.h"**#include** "Styling/SlateStyle.h"**#include** "Styling/SlateStyleRegistry.h"**#include** "Slate/SlateGameResources.h"TSharedPtr**<**FSlateStyleSet**>** FMenuStyles**::**MenuStyleInstance **=** NULL;
+// Fill out your copyright notice in the Description page of Project Settings.
 
-**void** FMenuStyles**::**Initialize()
+
+#include "MenuStyles.h"
+#include "Styling/SlateStyle.h"
+#include "Styling/SlateStyleRegistry.h"
+#include "Slate/SlateGameResources.h"
+
+TSharedPtr<FSlateStyleSet> FMenuStyles::MenuStyleInstance = NULL;
+
+void FMenuStyles::Initialize()
 {
-	**if** (**!**MenuStyleInstance.IsValid())
+	if (!MenuStyleInstance.IsValid())
 	{
-		MenuStyleInstance **=** Create();
-		FSlateStyleRegistry**::**RegisterSlateStyle(*****MenuStyleInstance);
+		MenuStyleInstance = Create();
+		FSlateStyleRegistry::RegisterSlateStyle(*MenuStyleInstance);
 	}
 }
 
-**void** FMenuStyles**::**Shutdown()
+void FMenuStyles::Shutdown()
 {
-	FSlateStyleRegistry**::**UnRegisterSlateStyle(*****MenuStyleInstance);
+	FSlateStyleRegistry::UnRegisterSlateStyle(*MenuStyleInstance);
 	ensure(MenuStyleInstance.IsUnique());
 	MenuStyleInstance.Reset();
 }
 
-FName FMenuStyles**::**GetStyleSetName()
+FName FMenuStyles::GetStyleSetName()
 {
-	**static** FName **StyleSetName**(TEXT("MenuStyles"));
-	**return** StyleSetName;
+	static FName StyleSetName(TEXT("MenuStyles"));
+	return StyleSetName;
 }
 
-TSharedRef**<**FSlateStyleSet**>** FMenuStyles**::**Create()
+TSharedRef<FSlateStyleSet> FMenuStyles::Create()
 {
-	TSharedRef**<**FSlateStyleSet**>** StyleRef **=** FSlateGameResources**::**New(FMenuStyles**::**GetStyleSetName(), "/Game/UI/Styles", "/Game/UI/Styles");
-	**return** StyleRef;
+	TSharedRef<FSlateStyleSet> StyleRef = FSlateGameResources::New(FMenuStyles::GetStyleSetName(), "/Game/UI/Styles", "/Game/UI/Styles");
+	return StyleRef;
 }
 
-**const** ISlateStyle**&** FMenuStyles**::**Get()
+const ISlateStyle& FMenuStyles::Get()
 {
-	**return** *****MenuStyleInstance;
+	return *MenuStyleInstance;
 }
 ```
 
-在**`Initialize()`**中，我们判断MenuStyleInstance（我们的单例指针）是否有效（就是不为空）。如果不是有效的，我们就实例化它，并且用**`SlateStyleRegistry`**来注册样式集。在**`Shutdown()`**中，我们做出了相反的，我们取消了注册样式集，确保我们的指针是唯一的(在这种情况下应该是唯一的)，然后我们重置它（设置为空）。**`GetStyleSetName()`**中，我们只需将我们的样式的FName缓存为静态变量，并始终返回该值。 这样，我们就有一个简单的方式来获取我们的样式集单例。
+在`Initialize()`中，我们判断MenuStyleInstance（我们的单例指针）是否有效（就是不为空）。如果不是有效的，我们就实例化它，并且用`SlateStyleRegistry`来注册样式集。在`Shutdown()`中，我们做出了相反的，我们取消了注册样式集，确保我们的指针是唯一的(在这种情况下应该是唯一的)，然后我们重置它（设置为空）。`GetStyleSetName()`中，我们只需将我们的样式的FName缓存为静态变量，并始终返回该值。 这样，我们就有一个简单的方式来获取我们的样式集单例。
 
 ## **加入到Game Module**
 
 如果现在编译代码，它无法正常运行。我们还从来没有调用我们的静态方法！找到你的游戏模块的源文件，里面应该真正只有两行：一个包括你的模块的头文件和类似于以下内容：
 
 ```cpp
-IMPLEMENT_PRIMARY_GAME_MODULE(FDefaultGameModuleImpl，SlateTutorials，“SlateTutorials”);
+IMPLEMENT_PRIMARY_GAME_MODULE(FDefaultGameModuleImpl，SlateTutorials，"SlateTutorials");
 ```
 
-注意**`FDefaultGameModuleImpl`**,这是用于你的游戏模块的类。很多时候不会在这里去处理任何其他事情 - 但我们需要绑定到游戏模块来初始化我们的样式集！我们如何做到这一点？好吧，Epic的做法（就是我们要使用的）似乎只是简单地定义模块类在这里 - 但要记住，如果你要做的比我们复杂很多，分为 **`header & source`**是一个更好的主意。
+注意`FDefaultGameModuleImpl`,这是用于你的游戏模块的类。很多时候不会在这里去处理任何其他事情 - 但我们需要绑定到游戏模块来初始化我们的样式集！我们如何做到这一点？好吧，Epic的做法（就是我们要使用的）似乎只是简单地定义模块类在这里 - 但要记住，如果你要做的比我们复杂很多，分为 `header & source`是一个更好的主意。
 
 ```cpp
-*// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.*
-**#include** "SomeTest.h"
-**#include** "Modules/ModuleManager.h"
-**#include** "Slate/MenuStyles.h"
-**#include** "Styling/SlateStyleRegistry.h"
+// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-*//Custom implementation of the Default Game Module.* 
-**class** **FSomeTestGameModule** **:** **public** FDefaultGameModuleImpl
+#include "SomeTest.h"
+#include "Modules/ModuleManager.h"
+#include "Slate/MenuStyles.h"
+#include "Styling/SlateStyleRegistry.h"
+
+//Custom implementation of the Default Game Module. 
+class FSomeTestGameModule : public FDefaultGameModuleImpl
 {
-	*// Called whenever the module is starting up. In here, we unregister any style sets* 
-	*// (which may have been added by other modules) sharing our* 
-	*// style set's name, then initialize our style set.* 
-	**virtual** **void** **StartupModule**() **override**{
-		*//Hot reload hack*
-		FSlateStyleRegistry**::**UnRegisterSlateStyle(FMenuStyles**::**GetStyleSetName());
-		FMenuStyles**::**Initialize();
+	// Called whenever the module is starting up. In here, we unregister any style sets 
+	// (which may have been added by other modules) sharing our 
+	// style set's name, then initialize our style set. 
+	virtual void StartupModule() override
+	{
+		//Hot reload hack
+		FSlateStyleRegistry::UnRegisterSlateStyle(FMenuStyles::GetStyleSetName());
+		FMenuStyles::Initialize();
 	}
 
-	*// Called whenever the module is shutting down. Here, we simply tell our MenuStyles to shut down.*
-	**virtual** **void** **ShutdownModule**() **override**{
-		FMenuStyles**::**Shutdown();
+	// Called whenever the module is shutting down. Here, we simply tell our MenuStyles to shut down.
+	virtual void ShutdownModule() override
+	{
+		FMenuStyles::Shutdown();
 	}
 };
 
@@ -1833,93 +1910,109 @@ IMPLEMENT_PRIMARY_GAME_MODULE(FSomeTestGameModule, SomeTest, "SomeTest" );
 
 ## **创建一个Style类**
 
-现在我们有了样式集，让我们继续创建一个类，我们可以使用它来建立和自定义我们的菜单样式。你有很多很多方法做到这些，来满足您的布局需要。我个人倾向于有一个单一的“全局”样式定义的东西，例如标准按钮样式。然后创建控件特定的样式集，如果自定义控件（比如我们的主菜单UI）只存在一个或两个空格。 那么我们该怎么做呢？ 简单！ 我们将创建一个新的**`GlobalMenuStyle`**类（和一个**`GlobalStyle`**结构…你很快会看到）。
+现在我们有了样式集，让我们继续创建一个类，我们可以使用它来建立和自定义我们的菜单样式。你有很多很多方法做到这些，来满足您的布局需要。我个人倾向于有一个单一的“全局”样式定义的东西，例如标准按钮样式。然后创建控件特定的样式集，如果自定义控件（比如我们的主菜单UI）只存在一个或两个空格。 那么我们该怎么做呢？ 简单！ 我们将创建一个新的`GlobalMenuStyle`类（和一个`GlobalStyle`结构…你很快会看到）。
 
 ![https://pic1.zhimg.com/80/v2-e3113abcaf72bea9e17b3aba581dc858_720w.jpg](https://pic1.zhimg.com/80/v2-e3113abcaf72bea9e17b3aba581dc858_720w.jpg)
 
 - GlobalMenuStyle.h
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#pragma once
-#include** "CoreMinimal.h"
-**#include** "Styling/SlateWidgetStyle.h"
-**#include** "Styling/SlateTypes.h"
-**#include** "Styling/SlateWidgetStyleContainerBase.h"
-**#include** "GlobalMenuStyle.generated.h"
+// Fill out your copyright notice in the Description page of Project Settings.
 
-*/**
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Styling/SlateWidgetStyle.h"
+#include "Styling/SlateTypes.h"
+#include "Styling/SlateWidgetStyleContainerBase.h"
+#include "GlobalMenuStyle.generated.h"
+
+
+
+/**
  * 
- */*USTRUCT()
-**struct** **FGlobalStyle** **:** **public** FSlateWidgetStyle
+ */
+USTRUCT()
+struct FGlobalStyle : public FSlateWidgetStyle
 {
 	GENERATED_USTRUCT_BODY()
 
-	*// FSlateWidgetStyle*
-	**virtual** **void** GetResources(TArray**<const** FSlateBrush***>&** OutBrushes) **const** **override**;
-	**static** **const** FName TypeName;
-	**virtual** **const** FName **GetTypeName**() **const** **override**;
-	**static** **const** FGlobalStyle**&** GetDefault();
+	// FSlateWidgetStyle
+	virtual void GetResources(TArray<const FSlateBrush*>& OutBrushes) const override;
+	static const FName TypeName;
+	virtual const FName GetTypeName() const override;
+	static const FGlobalStyle& GetDefault();
 
-	*// Style that define the appearance of all menu buttons.* 
-	UPROPERTY(EditAnywhere, Category **=** Appearance)
+	// Style that define the appearance of all menu buttons. 
+	UPROPERTY(EditAnywhere, Category = Appearance)
 		FButtonStyle MenuButtonStyle;
 
-	*// Style that defines the text on all of our menu buttons.* 
-	UPROPERTY(EditAnywhere, Category **=** Appearance)
+	// Style that defines the text on all of our menu buttons. 
+	UPROPERTY(EditAnywhere, Category = Appearance)
 		FTextBlockStyle MenuButtonTextStyle;
 
-	*// Style that defines the text for our menu title.* 
-	UPROPERTY(EditAnywhere, Category **=** Appearance)
+	// Style that defines the text for our menu title. 
+	UPROPERTY(EditAnywhere, Category = Appearance)
 		FTextBlockStyle MenuTitleStyle;
 };
 
-*/**
- */*UCLASS(hidecategories**=**Object, MinimalAPI)
-**class** **UGlobalMenuStyle** **:** **public** USlateWidgetStyleContainerBase
+/**
+ */
+UCLASS(hidecategories=Object, MinimalAPI)
+class UGlobalMenuStyle : public USlateWidgetStyleContainerBase
 {
 	GENERATED_BODY()
 
-**public:***/** The actual data describing the widget appearance. */*UPROPERTY(Category**=**Appearance, EditAnywhere, meta**=**(ShowOnlyInnerProperties))
+public:
+	/** The actual data describing the widget appearance. */
+	UPROPERTY(Category=Appearance, EditAnywhere, meta=(ShowOnlyInnerProperties))
 	FGlobalStyle MenuStyle;
 
-	**virtual** **const** **struct** **FSlateWidgetStyle*** **const** **GetStyle**() **const** **override**{
-		**return** **static_cast<** **const** **struct** **FSlateWidgetStyle*** **>**( **&**MenuStyle);
+	virtual const struct FSlateWidgetStyle* const GetStyle() const override
+	{
+		return static_cast< const struct FSlateWidgetStyle* >( &MenuStyle);
 	}
 };
 ```
 
-这一个有点长，但（像前面一样）不是很复杂。首先，我们有**`GetResources`**方法 - 如果你使用任何`Slate Brush`（例如，定义一个**`SImage`**窗口控件的属性），你可以在这里用**`OutBrushes`**添加这些画刷。 在我们的示例中，我们的按钮和文本块样式不是Brush，所以我们不必在这个方法中做任何事情。接下来，我们有**`GetTypeName`**方法 - 这个方法给出了类型的名称，它应该匹配实际的类型名称。 这用于引用这个控件是什么类型。 **`GetDefault()`**方法允许我们设置一些默认值 - 例如，如果我们想要的话我们可以为标题屏幕设置默认字体或大小。最后，我们有三个属性。第一和第二都是关于按钮 - 按钮（SButton控件）实际采取两种样式 - 一个用于按钮本身，一个用于表示按钮上的文本的文本块。第三个属性，然后是我们的菜单标题文本。但是，这一个结构是不够的！我们实际上有一个充当容器基础的类 - 这允许我们在编辑器中可以修改这些结构的公开属性，甚至比定义更简单的实现：
+这一个有点长，但（像前面一样）不是很复杂。首先，我们有`GetResources`方法 - 如果你使用任何`Slate Brush`（例如，定义一个`SImage`窗口控件的属性），你可以在这里用`OutBrushes`添加这些画刷。 在我们的示例中，我们的按钮和文本块样式不是Brush，所以我们不必在这个方法中做任何事情。接下来，我们有`GetTypeName`方法 - 这个方法给出了类型的名称，它应该匹配实际的类型名称。 这用于引用这个控件是什么类型。 `GetDefault()`方法允许我们设置一些默认值 - 例如，如果我们想要的话我们可以为标题屏幕设置默认字体或大小。最后，我们有三个属性。第一和第二都是关于按钮 - 按钮（SButton控件）实际采取两种样式 - 一个用于按钮本身，一个用于表示按钮上的文本的文本块。第三个属性，然后是我们的菜单标题文本。但是，这一个结构是不够的！我们实际上有一个充当容器基础的类 - 这允许我们在编辑器中可以修改这些结构的公开属性，甚至比定义更简单的实现：
 
 - GlobalMenuStyle.cpp
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#include** "GlobalMenuStyle.h"**const** FName FGlobalStyle**::**TypeName **=** TEXT("FGlobalStyle");
+// Fill out your copyright notice in the Description page of Project Settings.
 
-**const** FGlobalStyle**&** FGlobalStyle**::**GetDefault()
+
+#include "GlobalMenuStyle.h"
+
+
+const FName FGlobalStyle::TypeName = TEXT("FGlobalStyle");
+
+const FGlobalStyle& FGlobalStyle::GetDefault()
 {
-	**static** FGlobalStyle Default;
-	**return** Default;
+	static FGlobalStyle Default;
+	return Default;
 }
 
-**void** FGlobalStyle**::**GetResources(TArray**<const** FSlateBrush***>&** OutBrushes) **const**{
-	*// Add any brush resources here so that Slate can correctly atlas and reference them*
+void FGlobalStyle::GetResources(TArray<const FSlateBrush*>& OutBrushes) const
+{
+	// Add any brush resources here so that Slate can correctly atlas and reference them
 }
 
-**const** FName FGlobalStyle**::**GetTypeName() **const**{
-	**static** **const** FName InTypeName **=** TEXT("FGlobalStyle");
-	**return** InTypeName;
-}
+const FName FGlobalStyle::GetTypeName() const
+{
+	static const FName InTypeName = TEXT("FGlobalStyle");
+	return InTypeName;
+}	
 ```
 
-大多数这些方法是空的 - 毕竟，我们没有任何Brush注册，我同样不会设置默认值（字面上很简单，可以在**GetDefault()**方法中更改您的样式的默认属性）。 只要确保你的**GetTypeName()**返回一个FName匹配你的样式结构的名称！
+大多数这些方法是空的 - 毕竟，我们没有任何Brush注册，我同样不会设置默认值（字面上很简单，可以在`GetDefault()`方法中更改您的样式的默认属性）。 只要确保你的`GetTypeName()`返回一个FName匹配你的样式结构的名称！
 
 ![https://pic3.zhimg.com/80/v2-ed0245f4418f8a1b8de29975cb4656f2_720w.jpg](https://pic3.zhimg.com/80/v2-ed0245f4418f8a1b8de29975cb4656f2_720w.jpg)
 
 ## **定义你的风格**
 
-现在我们已经设置了样式，你不认为是时候去定义它们了吗？对吧！启动虚幻，在内容浏览器中创建一个名为UI的新文件夹，然后在其中创建一个名为Styles的新文件夹。 然后要创建实际的样式定义，创建一个新的**`Slate Widget`**资源（**`用户界面->Slate Widget Style`**）。 将提示您选择控件样式容器 - 选择`GlobalMenuStyle`，并将新资产命名为Global（如果您名为其他名称，请记住您以后使用的名称）。继续打开它，并将您的属性调整到你喜欢的东西 - 随意导入一些图像，为您的按钮使用！
+现在我们已经设置了样式，你不认为是时候去定义它们了吗？对吧！启动虚幻，在内容浏览器中创建一个名为UI的新文件夹，然后在其中创建一个名为Styles的新文件夹。 然后要创建实际的样式定义，创建一个新的`Slate Widget`资源（`用户界面->Slate Widget Style`）。 将提示您选择控件样式容器 - 选择`GlobalMenuStyle`，并将新资产命名为Global（如果您名为其他名称，请记住您以后使用的名称）。继续打开它，并将您的属性调整到你喜欢的东西 - 随意导入一些图像，为您的按钮使用！
 
 ![https://pic4.zhimg.com/80/v2-c00c98c87553603cd88554a46da114ff_720w.jpg](https://pic4.zhimg.com/80/v2-c00c98c87553603cd88554a46da114ff_720w.jpg)
 
@@ -1930,111 +2023,133 @@ IMPLEMENT_PRIMARY_GAME_MODULE(FSomeTestGameModule, SomeTest, "SomeTest" );
 首先，将以下成员变量添加到您的主菜单UI窗口控件：
 
 ```cpp
-**const** **struct** **FGlobalStyle** ***** MenuStyle;
+const struct FGlobalStyle * MenuStyle;
 ```
 
 - MainMenuUI.h
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#pragma once
-#include** "CoreMinimal.h"**#include** "MenuStyles.h"**#include** "Widgets/SCompoundWidget.h"**#include** "GlobalMenuStyle.h"*/**
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "MenuStyles.h"
+#include "Widgets/SCompoundWidget.h"
+#include "GlobalMenuStyle.h"
+
+/**
  * 
- */***class** **SOMETEST_API** SMainMenuUI : **public** SCompoundWidget
+ */
+class SOMETEST_API SMainMenuUI : public SCompoundWidget
 {
-**public:**SLATE_BEGIN_ARGS(SMainMenuUI)
+public:
+	SLATE_BEGIN_ARGS(SMainMenuUI)
 	{}
 
-	SLATE_ARGUMENT(TWeakObjectPtr**<class** **AMainMenuHUD>**, MainMenuHUD)
+	SLATE_ARGUMENT(TWeakObjectPtr<class AMainMenuHUD>, MainMenuHUD)
 
 	SLATE_END_ARGS()
 
-	*// Constructs and lays out the Main Menu UI Widget.*
-	*// args Arguments structure that contains widget-specific setup information.*
-	**void** Construct(**const** FArguments**&** args);
+	// Constructs and lays out the Main Menu UI Widget.
+	// args Arguments structure that contains widget-specific setup information.
+	void Construct(const FArguments& args);
 
-	*// Click handler for the Play Game! button – Calls MenuHUD’s PlayGameClicked() event.*
-	FReply **PlayGameClicked**();
+	// Click handler for the Play Game! button – Calls MenuHUD’s PlayGameClicked() event.
+	FReply PlayGameClicked();
 
-	*// Click handler for the Quit Game button – Calls MenuHUD’s QuitGameClicked() event.*
-	FReply **QuitGameClicked**();
+	// Click handler for the Quit Game button – Calls MenuHUD’s QuitGameClicked() event.
+	FReply QuitGameClicked();
 
-	*// Stores a weak reference to the HUD controlling this class.*
-	TWeakObjectPtr**<class** **AMainMenuHUD>** MainMenuHUD;
+	// Stores a weak reference to the HUD controlling this class.
+	TWeakObjectPtr<class AMainMenuHUD> MainMenuHUD;
 
-	**const** **struct** **FGlobalStyle*** MenuStyle;
+	const struct FGlobalStyle* MenuStyle;
 };
 ```
 
 - MainMenuUI.cpp
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#include** "MainMenuUI.h"**#include** "SlateOptMacros.h"**#include** "Widgets/SOverlay.h"**#include** "Widgets/SBoxPanel.h"**#include** "Widgets/Input/SButton.h"**#include** "Widgets/Text/STextBlock.h"**#include** "Engine/Engine.h"**#include** "MainMenuHUD.h"**#include** "Internationalization/Text.h"**#include** "MenuStyles.h"BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
-**void** SMainMenuUI**::**Construct(**const** FArguments**&** InArgs)
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "MainMenuUI.h"
+#include "SlateOptMacros.h"
+#include "Widgets/SOverlay.h"
+#include "Widgets/SBoxPanel.h"
+#include "Widgets/Input/SButton.h"
+#include "Widgets/Text/STextBlock.h"
+#include "Engine/Engine.h"
+#include "MainMenuHUD.h"
+#include "Internationalization/Text.h"
+#include "MenuStyles.h"
+
+BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
+void SMainMenuUI::Construct(const FArguments& InArgs)
 {
-	MainMenuHUD **=** InArgs._MainMenuHUD;
-	MenuStyle **=** **&**FMenuStyles**::**Get().GetWidgetStyle**<**FGlobalStyle**>**(TEXT("Global"));
+	MainMenuHUD = InArgs._MainMenuHUD;
+	MenuStyle = &FMenuStyles::Get().GetWidgetStyle<FGlobalStyle>(TEXT("Global"));
 
 	ChildSlot
 		[
 			SNew(SOverlay)
-			**+** SOverlay**::**Slot()
+			+ SOverlay::Slot()
 			.HAlign(HAlign_Center)
 			.VAlign(VAlign_Top)
 			[
 				SNew(STextBlock)
-				.TextStyle(**&**MenuStyle**->**MenuTitleStyle)
-				.Text(FText**::**FromString("Main Menu"))
+				.TextStyle(&MenuStyle->MenuTitleStyle)
+				.Text(FText::FromString("Main Menu"))
 			]
-			**+** SOverlay**::**Slot()
+			+ SOverlay::Slot()
 			.HAlign(HAlign_Right)
 			.VAlign(VAlign_Bottom)
 			[
 				SNew(SVerticalBox)
-				**+** SVerticalBox**::**Slot()
+				+ SVerticalBox::Slot()
 				[
 					SNew(SButton)
-					.ButtonStyle(**&**MenuStyle**->**MenuButtonStyle)
-					.TextStyle(**&**MenuStyle**->**MenuButtonTextStyle)
-					.Text(FText**::**FromString("Play Game!"))
-					.OnClicked(**this**, **&**SMainMenuUI**::**PlayGameClicked)
+					.ButtonStyle(&MenuStyle->MenuButtonStyle)
+					.TextStyle(&MenuStyle->MenuButtonTextStyle)
+					.Text(FText::FromString("Play Game!"))
+					.OnClicked(this, &SMainMenuUI::PlayGameClicked)
 				]
-				**+** SVerticalBox**::**Slot()
+				+ SVerticalBox::Slot()
 				[
 					SNew(SButton)
-					.ButtonStyle(**&**MenuStyle**->**MenuButtonStyle)
-					.TextStyle(**&**MenuStyle**->**MenuButtonTextStyle)
-					.Text(FText**::**FromString("Quit Game"))
-					.OnClicked(**this**, **&**SMainMenuUI**::**QuitGameClicked)
+					.ButtonStyle(&MenuStyle->MenuButtonStyle)
+					.TextStyle(&MenuStyle->MenuButtonTextStyle)
+					.Text(FText::FromString("Quit Game"))
+					.OnClicked(this, &SMainMenuUI::QuitGameClicked)
 				]
 			]
 		];
 }
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
-FReply SMainMenuUI**::**PlayGameClicked()
+FReply SMainMenuUI::PlayGameClicked()
 {
-	**if** (GEngine)
+	if (GEngine)
 	{
-		GEngine**->**AddOnScreenDebugMessage(**-**1, 3.f, FColor**::**Yellow, TEXT("PlayGameClicked"));
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("PlayGameClicked"));
 	}
 
-	*// actually the BlueprintImplementable function of the HUD is not called; uncomment if you want to handle the OnClick via Blueprint*
-	*//MainMenuHUD->PlayGameClicked();*
-	**return** FReply**::**Handled();
+	// actually the BlueprintImplementable function of the HUD is not called; uncomment if you want to handle the OnClick via Blueprint
+	//MainMenuHUD->PlayGameClicked();
+	return FReply::Handled();
 }
 
-FReply SMainMenuUI**::**QuitGameClicked()
+FReply SMainMenuUI::QuitGameClicked()
 {
-	**if** (GEngine)
+	if (GEngine)
 	{
-		GEngine**->**AddOnScreenDebugMessage(**-**1, 3.f, FColor**::**Yellow, TEXT("QuitGameClicked"));
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("QuitGameClicked"));
 	}
 
-	*// actually the BlueprintImplementable function of the HUD is not called; uncomment if you want to handle the OnClick via Blueprint*
-	*//MainMenuHUD->QuitGameClicked();*
-	**return** FReply**::**Handled();
+	// actually the BlueprintImplementable function of the HUD is not called; uncomment if you want to handle the OnClick via Blueprint
+	//MainMenuHUD->QuitGameClicked();
+	return FReply::Handled();
 }
 ```
 
@@ -2042,9 +2157,9 @@ FReply SMainMenuUI**::**QuitGameClicked()
 
 瞧！您的菜单现在已设置样式！这里我们做了什么的细节：
 
-首先，在绑定我们的**`MainMenuHUD`**后，实际上通过我们的**`FMenuStyles`**类在布局前面加载**`Slate Widget`**样式。
+首先，在绑定我们的`MainMenuHUD`后，实际上通过我们的`FMenuStyles`类在布局前面加载`Slate Widget`样式。
 
-接下来，我们调整游戏标题的**`STextBlock`**，以添加对**`TextStyle()`**的调用，并往其中传递我们的标题文本样式的地址。
+接下来，我们调整游戏标题的`STextBlock`，以添加对`TextStyle()`的调用，并往其中传递我们的标题文本样式的地址。
 
 这与Slate的属性调整完全相同！对于我们的两个按钮，我们实际分配两种样式。 首先，我们分配我们的按钮样式，然后我们分配文本样式 - 没有太多担心这里，对吧？你现在有一个菜单，有一些风格化的按钮！
 
@@ -2056,72 +2171,86 @@ FReply SMainMenuUI**::**QuitGameClicked()
 
 什么是数据绑定？ 数据绑定是一种来自软件开发的概念，其中信息输出（例如玩家的当前血量）与实际展示的信息相关联。这样，只要更改数据（例如，对玩家造成伤害），显示就会自动更新。
 
-在我们的示例中，我们将创建一个新的**`Slate UI`**，用作游戏中的HUD，在屏幕的上角显示玩家的当前血量和得分。最初，HUD将只有静态值 - 我们将在下一步中将其更改为绑定数据。 我将粘贴下面的代码，但不会详细介绍它是如何工作的 - 这是所有很简单的内容，已经在过去的教程中已经讲过了。
+在我们的示例中，我们将创建一个新的`Slate UI`，用作游戏中的HUD，在屏幕的上角显示玩家的当前血量和得分。最初，HUD将只有静态值 - 我们将在下一步中将其更改为绑定数据。 我将粘贴下面的代码，但不会详细介绍它是如何工作的 - 这是所有很简单的内容，已经在过去的教程中已经讲过了。
 
 - GameHUDUI.h
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#pragma once
-#include** "CoreMinimal.h"
-**#include** "Widgets/SCompoundWidget.h"
-**#include** "GlobalMenuStyle.h"
-**#include** "GameHUD.h"
+// Fill out your copyright notice in the Description page of Project Settings.
 
-*/**
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Widgets/SCompoundWidget.h"
+#include "GlobalMenuStyle.h"
+#include "GameHUD.h"
+
+/**
  * 
- */*
-**class** **SOMETEST_API** SGameHUDUI : **public** SCompoundWidget
+ */
+class SOMETEST_API SGameHUDUI : public SCompoundWidget
 {
-**public:**SLATE_BEGIN_ARGS(SGameHUDUI)
-		**:** _OwnerHUD()
+public:
+	SLATE_BEGIN_ARGS(SGameHUDUI)
+		: _OwnerHUD()
 	{}
-	SLATE_ARGUMENT(TWeakObjectPtr**<class** **AGameHUD>**, OwnerHUD);
+	SLATE_ARGUMENT(TWeakObjectPtr<class AGameHUD>, OwnerHUD);
 	SLATE_END_ARGS()
 
-	*/** Constructs this widget with InArgs */***void** Construct(**const** FArguments**&** InArgs);
+	/** Constructs this widget with InArgs */
+	void Construct(const FArguments& InArgs);
 
-**private:***/**
+private:
+	/**
 	 * Stores a weak reference to the HUD owning this widget.
-	 **/*
-	TWeakObjectPtr**<class** **AGameHUD>** OwnerHUD;
+	 **/
+	TWeakObjectPtr<class AGameHUD> OwnerHUD;
 
-	*/**
+	/**
 	 * A reference to the Slate Style used for this HUD's widgets.
-	 **/*
-	**const** **struct** **FGlobalStyle*** HUDStyle;
+	 **/
+	const struct FGlobalStyle* HUDStyle;
 };
 ```
 
 - GameHUDUI.cpp
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#include** "GameHUDUI.h"**#include** "SlateOptMacros.h"**#include** "MenuStyles.h"**#include** "GlobalMenuStyle.h"**#include** "Widgets/SOverlay.h"**#include** "Widgets/Text/STextBlock.h"BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
-**void** SGameHUDUI**::**Construct(**const** FArguments**&** InArgs)
-{
-	OwnerHUD **=** InArgs._OwnerHUD;
+// Fill out your copyright notice in the Description page of Project Settings.
 
-	HUDStyle **=** **&**FMenuStyles**::**Get().GetWidgetStyle**<**FGlobalStyle**>**("Global");
+
+#include "GameHUDUI.h"
+#include "SlateOptMacros.h"
+#include "MenuStyles.h"
+#include "GlobalMenuStyle.h"
+#include "Widgets/SOverlay.h"
+#include "Widgets/Text/STextBlock.h"
+
+BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
+void SGameHUDUI::Construct(const FArguments& InArgs)
+{
+	OwnerHUD = InArgs._OwnerHUD;
+
+	HUDStyle = &FMenuStyles::Get().GetWidgetStyle<FGlobalStyle>("Global");
 
 	ChildSlot
 		[
 			SNew(SOverlay)
-			**+** SOverlay**::**Slot()
+			+ SOverlay::Slot()
 			.HAlign(HAlign_Right)
 			.VAlign(VAlign_Top)
 			[
 				SNew(STextBlock)
-				.TextStyle(**&**HUDStyle**->**MenuTitleStyle)
-				.Text(FText**::**FromString("SCORE: 0"))
+				.TextStyle(&HUDStyle->MenuTitleStyle)
+				.Text(FText::FromString("SCORE: 0"))
 			]
-			**+** SOverlay**::**Slot()
+			+ SOverlay::Slot()
 			.HAlign(HAlign_Left)
 			.VAlign(VAlign_Top)
 			[
 				SNew(STextBlock)
-				.TextStyle(**&**HUDStyle**->**MenuTitleStyle)
-				.Text(FText**::**FromString("HEALTH: 100"))
+				.TextStyle(&HUDStyle->MenuTitleStyle)
+				.Text(FText::FromString("HEALTH: 100"))
 			]
 		];
 
@@ -2132,47 +2261,69 @@ END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 - GameHUD.h
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#pragma once
-#include** "CoreMinimal.h"**#include** "GameFramework/HUD.h"**#include** "GameHUDUI.h"**#include** "GameHUD.generated.h"*/**
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/HUD.h"
+#include "GameHUDUI.h"
+#include "GameHUD.generated.h"
+
+
+/**
  * 
- */*UCLASS()
-**class** **SOMETEST_API** AGameHUD : **public** AHUD
+ */
+UCLASS()
+class SOMETEST_API AGameHUD : public AHUD
 {
 	GENERATED_BODY()
 	
-**public:**AGameHUD();
+public:
 
-	*/**
+	AGameHUD();
+
+	/**
 	 * Initializes the Slate UI and adds it as a widget to the game viewport.
-	 **/***virtual** **void** **PostInitializeComponents**() **override**;
+	 **/
+	virtual void PostInitializeComponents() override;
 
-**private:***/**
+private:
+
+	/**
 	 * Reference to the Game HUD UI.
-	 **/*TSharedPtr**<class** **SGameHUDUI>** GameHUD;
+	 **/
+	TSharedPtr<class SGameHUDUI> GameHUD;
 };
 ```
 
 - GameHUD.cpp
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#include** "GameHUD.h"**#include** "Engine/GameViewportClient.h"**#include** "GameHUDUI.h"**#include** "Widgets/SWeakWidget.h"AGameHUD**::**AGameHUD()
-	**:** Super(FObjectInitializer**::**Get())
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "GameHUD.h"
+#include "Engine/GameViewportClient.h"
+#include "GameHUDUI.h"
+#include "Widgets/SWeakWidget.h"
+
+AGameHUD::AGameHUD()
+	: Super(FObjectInitializer::Get())
 {
 }
 
-**void** AGameHUD**::**PostInitializeComponents()
+void AGameHUD::PostInitializeComponents()
 {
-	Super**::**PostInitializeComponents();
+	Super::PostInitializeComponents();
 
-	**if** (GEngine **&&** GEngine**->**GameViewport)
+	if (GEngine && GEngine->GameViewport)
 	{
-		UGameViewportClient***** Viewport **=** GEngine**->**GameViewport;
+		UGameViewportClient* Viewport = GEngine->GameViewport;
 
-		SAssignNew(GameHUD, SGameHUDUI).OwnerHUD(TWeakObjectPtr**<**AGameHUD**>**(**this**));
+		SAssignNew(GameHUD, SGameHUDUI).OwnerHUD(TWeakObjectPtr<AGameHUD>(this));
 
-		Viewport**->**AddViewportWidgetContent(
+		Viewport->AddViewportWidgetContent(
 			SNew(SWeakWidget).PossiblyNullContent(GameHUD.ToSharedRef())
 		);
 	}
@@ -2183,56 +2334,74 @@ END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 我们有两个信息需要显示，我们想绑定到我们的UI：得分和血量。这两个都是整数，但它们必须绑定为我们的HUD的字符串！我们很快会从游戏模式（积分）和角色（血量）获取此信息，但首先我们将处理数据绑定部分。我们的绑定将有两个重要的任务：第一，它将获取实际数据。接下来，它会将其转换为要应用于文本块控件的FText。
 
-他们都需要两个东西：属性和绑定它的东西。在我们的例子中，因为我们需要对数据进行额外的处理（从一个整数转换为一个字符串），我们将在我们的widget类本身有一个函数来绑定。 将以下私有属性值和方法添加到**`SGameHUDUI`**类中：
+他们都需要两个东西：属性和绑定它的东西。在我们的例子中，因为我们需要对数据进行额外的处理（从一个整数转换为一个字符串），我们将在我们的widget类本身有一个函数来绑定。 将以下私有属性值和方法添加到`SGameHUDUI`类中：
 
 - GameHUDUI.h
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#pragma once
-#include** "CoreMinimal.h"**#include** "Widgets/SCompoundWidget.h"**#include** "GlobalMenuStyle.h"**#include** "GameHUD.h"*/**
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Widgets/SCompoundWidget.h"
+#include "GlobalMenuStyle.h"
+#include "GameHUD.h"
+
+/**
  * 
- */***class** **SOMETEST_API** SGameHUDUI : **public** SCompoundWidget
+ */
+class SOMETEST_API SGameHUDUI : public SCompoundWidget
 {
-**public:**SLATE_BEGIN_ARGS(SGameHUDUI)
-		**:** _OwnerHUD()
+public:
+	SLATE_BEGIN_ARGS(SGameHUDUI)
+		: _OwnerHUD()
 	{}
-	SLATE_ARGUMENT(TWeakObjectPtr**<class** **AGameHUD>**, OwnerHUD);
+	SLATE_ARGUMENT(TWeakObjectPtr<class AGameHUD>, OwnerHUD);
 	SLATE_END_ARGS()
 
-	*/** Constructs this widget with InArgs */***void** Construct(**const** FArguments**&** InArgs);
+	/** Constructs this widget with InArgs */
+	void Construct(const FArguments& InArgs);
 
-**private:***/**
+private:
+	/**
 	 * Stores a weak reference to the HUD owning this widget.
-	 **/*TWeakObjectPtr**<class** **AGameHUD>** OwnerHUD;
+	 **/
+	TWeakObjectPtr<class AGameHUD> OwnerHUD;
 
-	*/**
+	/**
 	 * A reference to the Slate Style used for this HUD's widgets.
-	 **/***const** **struct** **FGlobalStyle*** HUDStyle;
+	 **/
+	const struct FGlobalStyle* HUDStyle;
 
-**private:***/**
+private:
+	/**
 	 * Attribute storing the binding for the player's score.
-	 **/*TAttribute**<**FText**>** Score;
+	 **/
+	TAttribute<FText> Score;
 
-	*/**
+	/**
 	 * Attribute storing the binding for the player's health.
-	 **/*TAttribute**<**FText**>** Health;
+	 **/
+	TAttribute<FText> Health;
 
-	*/**
+	/**
 	 * Our Score will be bound to this function, which will retrieve the appropriate data and convert it into an FText.
-	 **/*FText **GetScore**() **const**;
+	 **/
+	FText GetScore() const;
 
-	*/**
+	/**
 	 * Our Health will be bound to this function, which will retrieve the appropriate data and convert it into an FText.
-	 **/*FText **GetHealth**() **const**;
+	 **/
+	FText GetHealth() const;
 };
 ```
 
-在虚幻中使用**`TAttribute`**类型来提供有一个**`accessor/getter`**的数据绑定。 接下来，我们有两个常量函数，负责检索和格式化数据到UI可以使用的类型！那么我们如何实际做绑定？ 好吧，它很简单 - 事实上，如果你在C++中为Unreal项目完成了输入绑定，你已经做到了。 在SGameHUDUI的Construct方法的顶部，在捕获HUDStyle之后，添加以下内容将我们的**`TAttributes`**绑定到它们适当的函数：
+在虚幻中使用`TAttribute`类型来提供有一个`accessor/getter`的数据绑定。 接下来，我们有两个常量函数，负责检索和格式化数据到UI可以使用的类型！那么我们如何实际做绑定？ 好吧，它很简单 - 事实上，如果你在C++中为Unreal项目完成了输入绑定，你已经做到了。 在SGameHUDUI的Construct方法的顶部，在捕获HUDStyle之后，添加以下内容将我们的`TAttributes`绑定到它们适当的函数：
 
 ```cpp
-Score.Bind(**this**, **&**STutorialGameHUDUI**::**GetScore);
-Health.Bind(**this**, **&**STutorialGameHUDUI**::**GetHealth);
+Score.Bind(this, &STutorialGameHUDUI::GetScore);
+Health.Bind(this, &STutorialGameHUDUI::GetHealth);
 ```
 
 接下来，我们在UI布局中直接使用TAttributes类型：
@@ -2241,20 +2410,20 @@ Health.Bind(**this**, **&**STutorialGameHUDUI**::**GetHealth);
 ChildSlot
 	[
 		SNew(SOverlay)
-		**+** SOverlay**::**Slot()
+		+ SOverlay::Slot()
 		.HAlign(HAlign_Right)
 		.VAlign(VAlign_Top)
 		[
 			SNew(STextBlock)
-			.TextStyle(**&**HUDStyle**->**MenuTitleStyle)
+			.TextStyle(&HUDStyle->MenuTitleStyle)
 			.Text(Score)
 		]
-		**+** SOverlay**::**Slot()
+		+ SOverlay::Slot()
 		.HAlign(HAlign_Left)
 		.VAlign(VAlign_Top)
 		[
 			SNew(STextBlock)
-			.TextStyle(**&**HUDStyle**->**MenuTitleStyle)
+			.TextStyle(&HUDStyle->MenuTitleStyle)
 			.Text(Health)
 		]
 	];
@@ -2263,8 +2432,8 @@ ChildSlot
 最后，我们要在绑定函数放入一些临时数据，只是为了确保一切正常工作：
 
 ```cpp
-FText STutorialGameHUDUI**::**GetScore() **const** { **return** FText**::**FromString("SCORE: --"); }
-FText STutorialGameHUDUI**::**GetHealth() **const** { **return** FText**::**FromString("HEALTH: --"); }
+FText STutorialGameHUDUI::GetScore() const { return FText::FromString("SCORE: --"); }
+FText STutorialGameHUDUI::GetHealth() const { return FText::FromString("HEALTH: --"); }
 ```
 
 继续编译肯定一切正常，恭喜你！你刚刚绑定了你的文本块！ 您可以对Slate的所有内容执行此绑定 - 按钮文本，列表项，图像背景，样式等。
@@ -2275,86 +2444,116 @@ FText STutorialGameHUDUI**::**GetHealth() **const** { **return** FText**::**From
 
 如果你只需要学习如何做数据绑定，而不关心本教程的细节，那么你可以跳过本节 - 在这里，我们只是实现了分数和血量功能。
 
-为了获得本教程的得分和血量数据，我添加了以下`GameMode`和**`Character`**类，并将它们设置为与**`GameMap`**关卡一起使用。
+为了获得本教程的得分和血量数据，我添加了以下`GameMode`和`Character`类，并将它们设置为与`GameMap`关卡一起使用。
 
 - GameMapGameMode.h
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#pragma once
-#include** "CoreMinimal.h"**#include** "GameFramework/GameMode.h"**#include** "GameMapGameMode.generated.h"*/**
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/GameMode.h"
+#include "GameMapGameMode.generated.h"
+
+/**
  * 
- */*UCLASS()
-**class** **SOMETEST_API** AGameMapGameMode : **public** AGameMode
+ */
+UCLASS()
+class SOMETEST_API AGameMapGameMode : public AGameMode
 {
 	GENERATED_BODY()
-**public:**AGameMapGameMode();
+public:
 
-	*/**
+	AGameMapGameMode();
+
+	/**
 	 * Retrieves the current Score from the game mode.
-	 **/*UFUNCTION(BlueprintPure, BlueprintCallable, Category **=** "Score")
+	 **/
+	UFUNCTION(BlueprintPure, BlueprintCallable, Category = "Score")
 		int32 GetScore();
 
-	*/**
+	/**
 	 * Adds to the game score.
-	 **/*UFUNCTION(BlueprintCallable, Category **=** "Score")
-		**void** AddPoints(int32 value);
+	 **/
+	UFUNCTION(BlueprintCallable, Category = "Score")
+		void AddPoints(int32 value);
 
-	*/**
+	/**
 	 * Removes from the game score.
-	 **/*UFUNCTION(BlueprintCallable, Category **=** "Score")
-		**void** DeductPoints(int32 value);
+	 **/
+	UFUNCTION(BlueprintCallable, Category = "Score")
+		void DeductPoints(int32 value);
 
-**private:***/**
+private:
+
+	/**
 	 * Stores the current score.
-	 **/*int32 CurrentScore;
+	 **/
+	int32 CurrentScore;
 };
 ```
 
 - GameMapGameMode.cpp
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#include** "GameMapGameMode.h"**#include** "GameCharacter.h"**#include** "GameHUD.h"**#include** <algorithm>AGameMapGameMode**::**AGameMapGameMode()
-	**:** Super(FObjectInitializer**::**Get())
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "GameMapGameMode.h"
+#include "GameCharacter.h"
+#include "GameHUD.h"
+#include <algorithm>
+
+AGameMapGameMode::AGameMapGameMode()
+	: Super(FObjectInitializer::Get())
 	, CurrentScore(0)
 {
-	HUDClass **=** AGameHUD**::**StaticClass();
-	DefaultPawnClass **=** AGameCharacter**::**StaticClass();
+	HUDClass = AGameHUD::StaticClass();
+	DefaultPawnClass = AGameCharacter::StaticClass();
 }
 
-int32 AGameMapGameMode**::**GetScore()
+int32 AGameMapGameMode::GetScore()
 {
-	**return** CurrentScore;
+	return CurrentScore;
 }
 
-**void** AGameMapGameMode**::**AddPoints(int32 value)
+void AGameMapGameMode::AddPoints(int32 value)
 {
-	**if** (value **>** 0)
-		CurrentScore **+=** value;
+	if (value > 0)
+		CurrentScore += value;
 }
 
-**void** AGameMapGameMode**::**DeductPoints(int32 value)
+void AGameMapGameMode::DeductPoints(int32 value)
 {
-	**if** (value **>** 0)
-		CurrentScore **=** std**::**max(CurrentScore **-** value, 0);
+	if (value > 0)
+		CurrentScore = std::max(CurrentScore - value, 0);
 }
 ```
 
 - GameCharacter.h
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#pragma once
-#include** "CoreMinimal.h"**#include** "GameFramework/Character.h"**#include** "GameCharacter.generated.h"UCLASS()
-**class** **SOMETEST_API** AGameCharacter : **public** ACharacter
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Character.h"
+#include "GameCharacter.generated.h"
+
+UCLASS()
+class SOMETEST_API AGameCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 	AGameCharacter();
-**public:***/**
+public:
+	/**
  * Stores the character's current health.
- **/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category **=** "Combat")
+ **/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 		int32 Health;
 
 };
@@ -2363,11 +2562,15 @@ int32 AGameMapGameMode**::**GetScore()
 - GameCharacter.cpp
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#include** "GameCharacter.h"*// Sets default values*
-AGameCharacter**::**AGameCharacter()
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "GameCharacter.h"
+
+// Sets default values
+AGameCharacter::AGameCharacter()
 {
-	Health **=** 100;
+	Health = 100;
 }
 ```
 
@@ -2376,29 +2579,31 @@ AGameCharacter**::**AGameCharacter()
 - GameHUDUI.cpp
 
 ```cpp
-FText SGameHUDUI**::**GetScore() **const**{
-	*// NOTE: THIS IS A TERRIBLE WAY TO DO THIS. DO NOT DO IT. IT ONLY WORKS ON SERVERS. USE GAME STATES INSTEAD!*
-	AGameMapGameMode***** gameMode **=** Cast**<**AGameMapGameMode**>**(OwnerHUD**->**GetWorldSettings()**->**GetWorld()**->**GetAuthGameMode());
+FText SGameHUDUI::GetScore() const
+{
+	// NOTE: THIS IS A TERRIBLE WAY TO DO THIS. DO NOT DO IT. IT ONLY WORKS ON SERVERS. USE GAME STATES INSTEAD!
+	AGameMapGameMode* gameMode = Cast<AGameMapGameMode>(OwnerHUD->GetWorldSettings()->GetWorld()->GetAuthGameMode());
 
-	**if** (gameMode **==** **nullptr**)
-		**return** FText**::**FromString(TEXT("SCORE: --"));
+	if (gameMode == nullptr)
+		return FText::FromString(TEXT("SCORE: --"));
 
-	FString score **=** TEXT("SCORE: ");
-	score.AppendInt(gameMode**->**GetScore());
+	FString score = TEXT("SCORE: ");
+	score.AppendInt(gameMode->GetScore());
 
-	**return** FText**::**FromString(score);
+	return FText::FromString(score);
 }
 
-FText SGameHUDUI**::**GetHealth() **const**{
-	AGameCharacter***** character **=** Cast**<**AGameCharacter**>**(OwnerHUD**->**PlayerOwner**->**GetCharacter());
+FText SGameHUDUI::GetHealth() const
+{
+	AGameCharacter* character = Cast<AGameCharacter>(OwnerHUD->PlayerOwner->GetCharacter());
 
-	**if** (character **==** **nullptr**)
-		**return** FText**::**FromString(TEXT("HEALTH: --"));
+	if (character == nullptr)
+		return FText::FromString(TEXT("HEALTH: --"));
 
-	FString health **=** TEXT("HEALTH: ");
-	health.AppendInt(character**->**Health);
+	FString health = TEXT("HEALTH: ");
+	health.AppendInt(character->Health);
 
-	**return** FText**::**FromString(health);
+	return FText::FromString(health);
 }
 ```
 
@@ -2407,64 +2612,77 @@ FText SGameHUDUI**::**GetHealth() **const**{
 - GameMapPlayerController.h
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#pragma once
-#include** "CoreMinimal.h"**#include** "GameFramework/PlayerController.h"**#include** "GameMapPlayerController.generated.h"*/**
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/PlayerController.h"
+#include "GameMapPlayerController.generated.h"
+
+/**
  * 
- */*UCLASS()
-**class** **SOMETEST_API** AGameMapPlayerController : **public** APlayerController
+ */
+UCLASS()
+class SOMETEST_API AGameMapPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
-**public:**AGameMapPlayerController();
+public:
+	AGameMapPlayerController();
 
-	**virtual** **void** **SetupInputComponent**() **override**;
+	virtual void SetupInputComponent() override;
 
-	**void** **HomeButtomPressed**();
-	**void** **EndButtomPressed**();
-	**void** **PgupButtomPressed**();
-	**void** **PgdnButtomPressed**();
+	void HomeButtomPressed();
+	void EndButtomPressed();
+	void PgupButtomPressed();
+	void PgdnButtomPressed();
 };
 ```
 
 - GameMapPlayerController.cpp
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#include** "GameMapPlayerController.h"**#include** "GameCharacter.h"AGameMapPlayerController**::**AGameMapPlayerController()
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "GameMapPlayerController.h"
+#include "GameCharacter.h"
+
+AGameMapPlayerController::AGameMapPlayerController()
 {
-	bShowMouseCursor **=** true;
-	bEnableClickEvents **=** true;
+	bShowMouseCursor = true;
+	bEnableClickEvents = true;
 }
 
-**void** AGameMapPlayerController**::**SetupInputComponent()
+void AGameMapPlayerController::SetupInputComponent()
 {
-	Super**::**SetupInputComponent();
+	Super::SetupInputComponent();
 
-	InputComponent**->**BindAction("Home", IE_Pressed, **this**, **&**AGameMapPlayerController**::**HomeButtomPressed);
-	InputComponent**->**BindAction("End", IE_Pressed, **this**, **&**AGameMapPlayerController**::**EndButtomPressed);
-	InputComponent**->**BindAction("Pgup", IE_Pressed, **this**, **&**AGameMapPlayerController**::**PgupButtomPressed);
-	InputComponent**->**BindAction("Pgdn", IE_Pressed, **this**, **&**AGameMapPlayerController**::**PgdnButtomPressed);
+	InputComponent->BindAction("Home", IE_Pressed, this, &AGameMapPlayerController::HomeButtomPressed);
+	InputComponent->BindAction("End", IE_Pressed, this, &AGameMapPlayerController::EndButtomPressed);
+	InputComponent->BindAction("Pgup", IE_Pressed, this, &AGameMapPlayerController::PgupButtomPressed);
+	InputComponent->BindAction("Pgdn", IE_Pressed, this, &AGameMapPlayerController::PgdnButtomPressed);
 }
 
-**void** AGameMapPlayerController**::**HomeButtomPressed()
+void AGameMapPlayerController::HomeButtomPressed()
 {
-	Cast**<**AGameCharacter**>**(GetCharacter())**->**AddHealth();
+	Cast<AGameCharacter>(GetCharacter())->AddHealth();
 }
 
-**void** AGameMapPlayerController**::**EndButtomPressed()
+void AGameMapPlayerController::EndButtomPressed()
 {
-	Cast**<**AGameCharacter**>**(GetCharacter())**->**SubHealth();
+	Cast<AGameCharacter>(GetCharacter())->SubHealth();
 }
 
-**void** AGameMapPlayerController**::**PgupButtomPressed()
+void AGameMapPlayerController::PgupButtomPressed()
 {
-	Cast**<**AGameCharacter**>**(GetCharacter())**->**AddScore();
+	Cast<AGameCharacter>(GetCharacter())->AddScore();
 }
 
-**void** AGameMapPlayerController**::**PgdnButtomPressed()
+void AGameMapPlayerController::PgdnButtomPressed()
 {
-	Cast**<**AGameCharacter**>**(GetCharacter())**->**SubScore();
+	Cast<AGameCharacter>(GetCharacter())->SubScore();
 }
 ```
 
@@ -2473,75 +2691,90 @@ FText SGameHUDUI**::**GetHealth() **const**{
 - GameCharacter.h
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#pragma once
-#include** "CoreMinimal.h"**#include** "GameFramework/Character.h"**#include** "GameMapGameMode.h"**#include** "GameCharacter.generated.h"UCLASS()
-**class** **SOMETEST_API** AGameCharacter : **public** ACharacter
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Character.h"
+#include "GameMapGameMode.h"
+#include "GameCharacter.generated.h"
+
+
+UCLASS()
+class SOMETEST_API AGameCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 	AGameCharacter();
-**public:***/**
+public:
+	/**
  * Stores the character's current health.
- **/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category **=** "Combat")
+ **/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 		int32 Health;
 
-	FORCEINLINE AGameMapGameMode***** **GetGameMode**() { **return** GetWorld() **?** GetWorld()**->**GetAuthGameMode**<**AGameMapGameMode**>**() **:** **nullptr**; }
+	FORCEINLINE AGameMapGameMode* GetGameMode() { return GetWorld() ? GetWorld()->GetAuthGameMode<AGameMapGameMode>() : nullptr; }
 
-	**void** **AddHealth**();
-	**void** **SubHealth**();
-	**void** **AddScore**();
-	**void** **SubScore**();
+	void AddHealth();
+	void SubHealth();
+	void AddScore();
+	void SubScore();
 };
 ```
 
 - GameCharacter.cpp
 
 ```cpp
-*// Fill out your copyright notice in the Description page of Project Settings.*
-**#include** "GameCharacter.h"**#include** "Engine/World.h"*// Sets default values*
-AGameCharacter**::**AGameCharacter()
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "GameCharacter.h"
+#include "Engine/World.h"
+
+// Sets default values
+AGameCharacter::AGameCharacter()
 {
-	Health **=** 10;
+	Health = 10;
 }
 
-**void** AGameCharacter**::**AddHealth()
+void AGameCharacter::AddHealth()
 {
-	**if** (GEngine)
+	if (GEngine)
 	{
-		GEngine**->**AddOnScreenDebugMessage(**-**1, 3.f, FColor**::**Yellow, TEXT("AddHealth"));
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("AddHealth"));
 	}
-	Health**++**;
+	Health++;
 }
 
-**void** AGameCharacter**::**SubHealth()
+void AGameCharacter::SubHealth()
 {
-	**if** (GEngine)
+	if (GEngine)
 	{
-		GEngine**->**AddOnScreenDebugMessage(**-**1, 3.f, FColor**::**Yellow, TEXT("SubHealth"));
-	}
-	
-	Health **=** **--**Health **<=** 0 **?** 0 **:** Health;
-}
-
-**void** AGameCharacter**::**AddScore()
-{
-	**if** (GEngine)
-	{
-		GEngine**->**AddOnScreenDebugMessage(**-**1, 3.f, FColor**::**Yellow, TEXT("AddScore"));
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("SubHealth"));
 	}
 	
-	GetGameMode()**->**AddPoints(10);
+	Health = --Health <= 0 ? 0 : Health;
 }
 
-**void** AGameCharacter**::**SubScore()
+void AGameCharacter::AddScore()
 {
-	**if** (GEngine)
+	if (GEngine)
 	{
-		GEngine**->**AddOnScreenDebugMessage(**-**1, 3.f, FColor**::**Yellow, TEXT("SubScore"));
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("AddScore"));
+	}
+	
+	GetGameMode()->AddPoints(10);
+}
+
+void AGameCharacter::SubScore()
+{
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("SubScore"));
 	}
 
-	GetGameMode()**->**DeductPoints(10);
+	GetGameMode()->DeductPoints(10);
 }
 ```
 
