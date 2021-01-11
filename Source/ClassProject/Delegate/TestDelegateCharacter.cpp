@@ -18,7 +18,7 @@ void ATestDelegateCharacter::OnBindAndExecute()
 	// Bind Static
 	CharacterDelegate1.BindStatic(StaticDelegateProc);
 
-	CharacterDelegate2.BindStatic(/*ATestDelegateCharacter::*/StaticCharacterDelegateProc);
+	CharacterDelegate2.BindStatic(ATestDelegateCharacter::StaticCharacterDelegateProc);
 
 	// Bind Raw
 	DelegateCppTestClass Obj1;
@@ -126,7 +126,7 @@ void ATestDelegateCharacter::OnDelegateMulticastTest()
 	bool b1 = CharacterDelegateMulticast1.IsBound(); // false
 
 	FDelegateHandle HandleMC1 = CharacterDelegateMulticast1.AddStatic(StaticDelegateProc); // 绑定实例个数为：1
-	CharacterDelegateMulticast1.AddStatic(/*ATestDelegateCharacter::*/StaticCharacterDelegateProc); // 绑定实例个数为：2
+	CharacterDelegateMulticast1.AddStatic(ATestDelegateCharacter::StaticCharacterDelegateProc); // 绑定实例个数为：2
 
 	bool b2 = CharacterDelegateMulticast1.IsBound(); // true
 	bool b3 = CharacterDelegateMulticast1.IsBoundToObject(this); // false
