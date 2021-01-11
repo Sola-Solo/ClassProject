@@ -18,6 +18,11 @@ void AMyActor::MyFunc()
 	UE_LOG(LogTemp, Warning, TEXT("Hello World"));
 }
 
+FString AMyActor::BlueprintNativeEventFunction_Implementation(AActor* InActor)
+{
+	return InActor->GetName();
+}
+
 // Called when the game starts or when spawned
 void AMyActor::BeginPlay()
 {

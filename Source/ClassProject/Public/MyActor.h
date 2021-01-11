@@ -15,14 +15,17 @@ public:
 	// Sets default values for this actor's properties
 	AMyActor();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Damage")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="BlueprintProperty")
 	int32 A;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="Damage")
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category="BlueprintProperty")
 	float B;
 
-	UFUNCTION(BlueprintCallable, Category="Damage")
+	UFUNCTION(BlueprintCallable, Category="BlueprintFunc")
 	void MyFunc();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, meta = (DisplayName = "Blueprint Native Event Function"), Category = "BlueprintFunc")
+    FString BlueprintNativeEventFunction(AActor* InActor);
 
 protected:
 	// Called when the game starts or when spawned
