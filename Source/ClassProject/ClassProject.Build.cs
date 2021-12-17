@@ -15,7 +15,9 @@ public class ClassProject : ModuleRules
 			"Engine",
 			"InputCore",
 			"Slate",//Slate±ØÒªÄ£¿é
-			"SlateCore"
+			"SlateCore",
+			"HeadMountedDisplay", 
+			"UMG"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
