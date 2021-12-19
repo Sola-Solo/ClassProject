@@ -6,6 +6,13 @@
 #include "GameFramework/Actor.h"
 #include "MyActor.generated.h"
 
+UENUM()
+enum class EType : uint8
+{
+	EEE,
+};
+
+
 UCLASS()
 class CLASSPROJECT_API AMyActor : public AActor
 {
@@ -24,8 +31,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category="BlueprintFunc")
 	void MyFunc();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, meta = (DisplayName = "Blueprint Native Event Function"), Category = "BlueprintFunc")
+	UFUNCTION(BlueprintCallable, Category="BlueprintFunc")
+	void MyFunc2(){}
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, meta = (DisplayName = "ClassBlueprint Event Function"), Category = "BlueprintFunc")
     FString BlueprintNativeEventFunction(AActor* InActor);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void Test();
 
 protected:
 	// Called when the game starts or when spawned
@@ -34,5 +47,15 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	/*{
+		TArray Arr;  // --> std::vector
+		TMap Map; // std::map
+		TSet Set;//std::set
+	}*/
 
+	/*TSharedPtr<XXX>  shared_ptr;
+	TWeakPtr<XXX>  */
+
+	FText MyText = NSLOCTEXT("Game UI", "Health Warning Message", "Low Health!");
+	
 };
